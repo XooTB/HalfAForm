@@ -9,8 +9,8 @@ export default function Home() {
             Looking for a easy and elegant way to run a Campaign?
           </h1>
           <p>
-            Formly is a platform that allows you to create, manage, and analyze
-            your campaigns in a simple and intuitive way.
+            Half A Form is a platform that allows you to create, manage, and
+            analyze your campaigns in a simple and intuitive way.
           </p>
         </div>
         <div className="w-1/2 flex items-center justify-center">

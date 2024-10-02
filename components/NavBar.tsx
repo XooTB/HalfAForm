@@ -15,7 +15,7 @@ type Props = {};
 const NavBar = ({}: Props) => {
   return (
     <div className="flex justify-between items-center px-32 py-5">
-      <h1 className="text-2xl capitalize font-semibold">Formly</h1>
+      <h1 className="text-2xl capitalize font-semibold">Half A Form</h1>
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
