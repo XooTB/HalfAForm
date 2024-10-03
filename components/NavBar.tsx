@@ -9,6 +9,7 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import ThemeToggle from "./ThemeToggle";
+import UserProfile from "./UserProfile";
 
 type Props = {};
 
@@ -29,8 +30,9 @@ const NavBar = ({}: Props) => {
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-      <div>
+      <div className="flex items-center gap-4">
         <ThemeToggle />
+        <UserProfile />
       </div>
     </div>
   );
