@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { act, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -9,6 +9,8 @@ import {
   PointerSensor,
   useSensors,
   useSensor,
+  DragStartEvent,
+  DragMoveEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -17,14 +19,15 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
+import SortableItem from "./SortableItem";
 import Draggable from "./Draggable";
-import Droppable from "./Droppable";
 
-type Props = {};
+interface Item {
+  id: string;
+  content: string;
+}
 
-const TemplateBuilder = (props: Props) => {
-  const [droppedItems, setDroppedItems] = useState<string[]>([]);
-
+const TemplateBuilder = () => {
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -32,67 +35,62 @@ const TemplateBuilder = (props: Props) => {
     })
   );
 
-  const draggableItems = [
+  const items: Item[] = [
     { id: "draggable1", content: "Drag me 1" },
     { id: "draggable2", content: "Drag me 2" },
     { id: "draggable3", content: "Drag me 3" },
   ];
 
+  const [droppedItems, setDroppedItems] = useState<Item[]>([]);
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
-    if (event.over && event.over.id === "droppable") {
-      const draggedItemId = event.active.id as string;
-
-      setDroppedItems((prevItems) => [...prevItems, draggedItemId]);
-    }
-
-    if (active.id !== over?.id) {
+    if (!droppedItems.some((item) => item.id === active.id)) {
+      // If the Item is not in droppedItems, Then Add it.
+      setDroppedItems((prevItems) => [
+        ...prevItems,
+        {
+          ...items.find((item) => item.id === active.id)!,
+          id: `dropped-${active.id}-${Date.now()}`,
+        },
+      ]);
+    } else if (active.id !== over?.id) {
+      // If the Item is already in droppedItems and order has changed, Change the order.
       setDroppedItems((prevItems) => {
-        const oldIndex = prevItems.indexOf(active.id as string);
-        const newIndex = prevItems.indexOf(over?.id as string);
+        const oldIndex = prevItems.findIndex((item) => item.id === active.id);
+        const newIndex = prevItems.findIndex((item) => item.id === over?.id);
         return arrayMove(prevItems, oldIndex, newIndex);
       });
     }
-
-    console.log(active, over);
   }
 
   return (
-    <div className="w-1/2 min-h-screen flex justify-center pt-10 border px-14 gap-5">
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        <div className="flex flex-col gap-2 mb-4 border border-gray-300 rounded-md p-2">
-          {draggableItems.map((item) => (
+    <div className="w-2/3 min-h-screen flex justify-center pt-10 border px-14 gap-5 rounded-lg">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="border w-1/3 flex flex-col gap-2 px-2 py-3 rounded-lg">
+          {items.map((item) => (
             <Draggable key={item.id} id={item.id}>
               {item.content}
             </Draggable>
           ))}
         </div>
-        <SortableContext
-          items={droppedItems}
-          strategy={verticalListSortingStrategy}
-        >
-          <Droppable id="droppable">
-            <div className="flex flex-col gap-2 px-4 py-2">
-              {droppedItems.length === 0
-                ? "Drop here"
-                : droppedItems.map((itemId, index) => {
-                    const item = draggableItems.find((i) => i.id === itemId);
-                    return (
-                      item && (
-                        <Draggable
-                          key={`${item.id}-${index}`}
-                          id={`${item.id}-${index}`}
-                          handle
-                        >
-                          {item.content}
-                        </Draggable>
-                      )
-                    );
-                  })}
-            </div>
-          </Droppable>
-        </SortableContext>
+        <div className="flex flex-col gap-2 mb-4 border border-gray-300 rounded-md p-2 w-2/3">
+          <SortableContext
+            items={droppedItems}
+            strategy={verticalListSortingStrategy}
+          >
+            {droppedItems.map((item) => (
+              <SortableItem key={item.id} id={item.id} handle>
+                {item.content}
+              </SortableItem>
+            ))}
+          </SortableContext>
+        </div>
       </DndContext>
     </div>
   );
