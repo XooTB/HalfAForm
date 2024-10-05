@@ -8,7 +8,7 @@ type Props = {
   handle?: boolean;
 };
 
-function Draggable({ children, id, handle }: Props & { showHandle?: boolean }) {
+function Draggable({ children, id, handle }: Props) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
   });
