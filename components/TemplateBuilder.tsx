@@ -65,6 +65,10 @@ const TemplateBuilder = () => {
     }
   }
 
+  function handleDelete(id: string) {
+    setDroppedItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  }
+
   return (
     <div className="w-2/3 min-h-screen flex justify-center pt-10 border px-14 gap-5 rounded-lg">
       <DndContext
@@ -85,10 +89,20 @@ const TemplateBuilder = () => {
             strategy={verticalListSortingStrategy}
           >
             {droppedItems.map((item) => (
-              <SortableItem key={item.id} id={item.id} handle>
+              <SortableItem
+                key={item.id}
+                id={item.id}
+                handle
+                handleDelete={handleDelete}
+              >
                 {item.content}
               </SortableItem>
             ))}
+            {droppedItems.length === 0 && (
+              <div className="text-gray-500 text-center">
+                Drag items from the left to add them here.
+              </div>
+            )}
           </SortableContext>
         </div>
       </DndContext>
