@@ -2,21 +2,14 @@
 
 import { useSession } from "next-auth/react";
 import React from "react";
+import Dashboard from "./Dashboard";
 
 type Props = {};
 
 const Page = (props: Props) => {
   const { data: session } = useSession();
 
-  return (
-    <>
-      {session ? (
-        <h1>User {session.user?.name} is logged in</h1>
-      ) : (
-        <h1>User is not logged in</h1>
-      )}
-    </>
-  );
+  return <>{session ? <Dashboard /> : <h1>User is not logged in</h1>}</>;
 };
 
 export default Page;
