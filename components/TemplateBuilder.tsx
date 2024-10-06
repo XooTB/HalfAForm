@@ -76,8 +76,6 @@ const TemplateBuilder = () => {
     removeBlock,
   } = useTemplateBuilderStore();
 
-  console.log(blocks);
-
   // Configure drag and drop sensors
   const sensors = useSensors(
     useSensor(PointerSensor),
