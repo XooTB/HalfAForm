@@ -78,7 +78,7 @@ const MultipleChoiceQuestionBlock = ({ blockId }: Props) => {
           </SelectTrigger>
           <SelectContent>
             {choiceTypes.map((choice) => (
-              <SelectItem key={choice} value={choice}>
+              <SelectItem key={choice} value={choice.toLowerCase()}>
                 {choice}
               </SelectItem>
             ))}
