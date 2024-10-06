@@ -1,10 +1,15 @@
+"use client";
+
+import React from "react";
 import TemplateBuilder from "@/components/TemplateBuilder";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import { useSaveTemplate } from "@/hooks/useSaveTemplate";
 
 type Props = {};
 
-const page = (props: Props) => {
+const page = ({}: Props) => {
+  const { saveTemplate } = useSaveTemplate();
+
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
       <div className="w-full px-[17%] pb-5 flex justify-between items-center">
@@ -14,7 +19,7 @@ const page = (props: Props) => {
             Design your form by dragging and dropping elements from the left.
           </p>
         </div>
-        <Button>Save Template</Button>
+        <Button onClick={saveTemplate}>Save Template</Button>
       </div>
       <TemplateBuilder />
     </div>
@@ -22,4 +27,3 @@ const page = (props: Props) => {
 };
 
 export default page;
-<h1>Design your form</h1>
