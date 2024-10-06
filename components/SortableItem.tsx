@@ -6,11 +6,12 @@ import { GripVertical, TrashIcon } from "lucide-react";
 type Props = {
   id: string;
   children: React.ReactNode;
+  title?: string;
   handle?: boolean;
   handleDelete?: (id: string) => void;
 };
 
-function SortableItem({ id, children, handle, handleDelete }: Props) {
+function SortableItem({ id, children, title, handle, handleDelete }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: id });
 
@@ -34,6 +35,7 @@ function SortableItem({ id, children, handle, handleDelete }: Props) {
             {...listeners}
           />
         )}
+        {title && <h2>{title}</h2>}
         {handleDelete && (
           <button onClick={() => handleDelete(id)} className="z-10">
             <TrashIcon
@@ -43,9 +45,7 @@ function SortableItem({ id, children, handle, handleDelete }: Props) {
           </button>
         )}
       </div>
-      <div className="w-full pt-2" {...listeners}>
-        {children}
-      </div>
+      <div className="w-full pt-2">{children}</div>
     </div>
   );
 }
