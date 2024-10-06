@@ -13,36 +13,65 @@ import {
 } from "@/components/ui/select";
 import { Button } from "../ui/button";
 import { Trash } from "lucide-react";
+import { useTemplateBuilderStore } from "@/stores/TemplateBuilderStore";
 
-type Props = {};
+type Props = {
+  blockId?: string;
+};
 
 const choiceTypes = ["Checkbox", "Radio", "Dropdown"];
 
-const MultipleChoiceQuestionBlock = ({}: Props) => {
+const MultipleChoiceQuestionBlock = ({ blockId }: Props) => {
+  const { updateBlock } = useTemplateBuilderStore();
+
   const [choiceType, setChoiceType] = useState<string>("");
   const [choices, setChoices] = useState<string[]>([""]);
-  const [description, setDescription] = useState<string>("");
+
+  const handleChange = (e: any, name: string) => {
+    if (!blockId) return;
+    updateBlock(blockId, { [name]: e.target.value });
+  };
 
   const handleAddChoice = () => {
+    if (!blockId) return;
     setChoices([...choices, ""]);
+    updateBlock(blockId, {
+      options: [...choices, ""],
+    });
   };
 
   const handleRemoveChoice = (index: number) => {
+    if (!blockId) return;
     setChoices(choices.filter((_, i) => i !== index));
+    updateBlock(blockId, {
+      options: choices.filter((_, i) => i !== index),
+    });
   };
 
   const handleChangeChoice = (index: number, value: string) => {
+    if (!blockId) return;
     setChoices(choices.map((choice, i) => (i === index ? value : choice)));
+    updateBlock(blockId, {
+      options: choices.map((choice, i) => (i === index ? value : choice)),
+    });
   };
 
   const handleChangeChoiceType = (value: string) => {
+    if (!blockId) return;
     setChoiceType(value);
+    updateBlock(blockId, {
+      optionsType: value as "checkbox" | "radio" | "dropdown",
+    });
   };
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-2">
-        <Input placeholder="Question" />
+        <Input
+          name="question"
+          placeholder="Question"
+          onChange={(e) => handleChange(e, "question")}
+        />
         <Select onValueChange={handleChangeChoiceType}>
           <SelectTrigger>
             <SelectValue placeholder="Select a choice type" />
@@ -83,8 +112,8 @@ const MultipleChoiceQuestionBlock = ({}: Props) => {
       <Textarea
         placeholder="Description (Optional)"
         className="h-5"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        name="description"
+        onChange={(e) => handleChange(e, "description")}
       />
     </div>
   );
