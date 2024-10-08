@@ -14,6 +14,7 @@ import {
 import { Button } from "../ui/button";
 import { Trash } from "lucide-react";
 import { useTemplateBuilderStore } from "@/stores/TemplateBuilderStore";
+import { z } from "zod";
 
 type Props = {
   blockId?: string;
@@ -21,47 +22,109 @@ type Props = {
 
 const choiceTypes = ["Checkbox", "Radio", "Dropdown"];
 
+const schema = z.object({
+  question: z.string().min(1, "Question is required"),
+  description: z.string().optional(),
+  options: z
+    .array(z.string().min(1, "Option cannot be empty"))
+    .min(1, "At least one option is required"),
+  optionsType: z.enum(["checkbox", "radio", "dropdown"], {
+    errorMap: () => ({ message: "Invalid option type selected" }),
+  }),
+});
+
 const MultipleChoiceQuestionBlock = ({ blockId }: Props) => {
   const { updateBlock } = useTemplateBuilderStore();
 
+  const [question, setQuestion] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [choiceType, setChoiceType] = useState<string>("");
   const [choices, setChoices] = useState<string[]>([""]);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const handleChange = (e: any, name: string) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    name: string
+  ) => {
     if (!blockId) return;
-    updateBlock(blockId, { [name]: e.target.value });
+    setErrors([]);
+
+    const newValue = { [name]: e.target.value };
+
+    if (name === "question") {
+      validateAndUpdateBlock({
+        ...newValue,
+        options: choices,
+        optionsType: choiceType,
+      });
+      setQuestion(e.target.value);
+    } else {
+      updateBlock(blockId, newValue);
+      setDescription(e.target.value);
+    }
   };
 
   const handleAddChoice = () => {
     if (!blockId) return;
-    setChoices([...choices, ""]);
-    updateBlock(blockId, {
-      options: [...choices, ""],
+    const updatedChoices = [...choices, ""];
+    setChoices(updatedChoices);
+    validateAndUpdateBlock({
+      options: updatedChoices,
+      optionsType: choiceType,
+      question,
+      description,
     });
   };
 
   const handleRemoveChoice = (index: number) => {
     if (!blockId) return;
-    setChoices(choices.filter((_, i) => i !== index));
-    updateBlock(blockId, {
-      options: choices.filter((_, i) => i !== index),
+    const updatedChoices = choices.filter((_, i) => i !== index);
+    setChoices(updatedChoices);
+    validateAndUpdateBlock({
+      options: updatedChoices,
+      optionsType: choiceType,
+      question,
+      description,
     });
   };
 
   const handleChangeChoice = (index: number, value: string) => {
     if (!blockId) return;
-    setChoices(choices.map((choice, i) => (i === index ? value : choice)));
-    updateBlock(blockId, {
-      options: choices.map((choice, i) => (i === index ? value : choice)),
+    const updatedChoices = choices.map((choice, i) =>
+      i === index ? value : choice
+    );
+    setChoices(updatedChoices);
+    validateAndUpdateBlock({
+      options: updatedChoices,
+      optionsType: choiceType,
+      question,
+      description,
     });
   };
 
   const handleChangeChoiceType = (value: string) => {
     if (!blockId) return;
     setChoiceType(value);
-    updateBlock(blockId, {
+    validateAndUpdateBlock({
+      options: choices,
       optionsType: value as "checkbox" | "radio" | "dropdown",
+      question,
+      description,
     });
+  };
+
+  const validateAndUpdateBlock = (data: any) => {
+    if (!blockId) return;
+    setErrors([]);
+
+    try {
+      schema.parse(data);
+      updateBlock(blockId, data);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setErrors(err.errors.map((error) => error.message));
+      }
+    }
   };
 
   return (
@@ -115,6 +178,11 @@ const MultipleChoiceQuestionBlock = ({ blockId }: Props) => {
         name="description"
         onChange={(e) => handleChange(e, "description")}
       />
+      {errors.map((error, index) => (
+        <p key={index} className="text-xs text-red-500">
+          {error}
+        </p>
+      ))}
     </div>
   );
 };

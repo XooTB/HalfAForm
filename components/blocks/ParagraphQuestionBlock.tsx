@@ -1,24 +1,51 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { useTemplateBuilderStore } from "@/stores/TemplateBuilderStore";
 import { Switch } from "../ui/switch";
+import { z } from "zod";
 
 type Props = {
   blockId?: string;
 };
 
+const schema = z.object({
+  question: z.string().min(1, "Question is required"),
+  description: z.string().optional(),
+});
+
 const ParagraphQuestionBlock = ({ blockId }: Props) => {
-  const { updateBlock, blocks } = useTemplateBuilderStore();
+  const { updateBlock } = useTemplateBuilderStore();
+  const [error, setError] = useState<string | null>(null);
 
   const handleSwitchChange = (checked: boolean) => {
     if (!blockId) return;
     updateBlock(blockId, { required: checked });
   };
 
-  const handleChange = (e: any, name: string) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    name: string
+  ) => {
     if (!blockId) return;
-    updateBlock(blockId, { [name]: e.target.value });
+    setError(null);
+
+    const newValue = { [name]: e.target.value };
+
+    if (name === "question") {
+      try {
+        schema.parse(newValue);
+        updateBlock(blockId, newValue);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          setError(error.errors[0].message);
+        }
+      }
+    } else {
+      updateBlock(blockId, newValue);
+    }
   };
 
   return (
@@ -43,6 +70,7 @@ const ParagraphQuestionBlock = ({ blockId }: Props) => {
         placeholder="Description (Optional)"
         onChange={(e) => handleChange(e, "description")}
       />
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 };

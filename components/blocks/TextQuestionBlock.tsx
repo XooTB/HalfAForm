@@ -1,21 +1,48 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useTemplateBuilderStore } from "@/stores/TemplateBuilderStore";
 import { Textarea } from "../ui/textarea";
 import { Switch } from "../ui/switch";
+import { z } from "zod";
 
 interface TextQuestionBlockProps {
   blockId?: string;
 }
 
+const schema = z.object({
+  question: z.string().min(1, "Question is required"),
+  description: z.string().optional(),
+});
+
 const TextQuestionBlock: React.FC<TextQuestionBlockProps> = ({
   blockId,
 }: TextQuestionBlockProps) => {
   const { updateBlock, blocks } = useTemplateBuilderStore();
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: any, name: string) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    name: string
+  ) => {
     if (!blockId) return;
-    updateBlock(blockId, { [name]: e.target.value });
+    setError(null);
+
+    const newValue = { [name]: e.target.value };
+
+    if (name === "question") {
+      try {
+        schema.parse(newValue);
+        updateBlock(blockId, newValue);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          setError(error.errors[0].message);
+        }
+      }
+    } else {
+      updateBlock(blockId, newValue);
+    }
   };
 
   const handleSwitchChange = (checked: boolean) => {
@@ -46,6 +73,7 @@ const TextQuestionBlock: React.FC<TextQuestionBlockProps> = ({
         placeholder="Description (optional)"
         onChange={(e) => handleChange(e, "description")}
       />
+      {error && <p className="text-red-500 text-xs">{error}</p>}
     </div>
   );
 };
