@@ -27,7 +27,7 @@ import TextQuestionBlock from "./blocks/TextQuestionBlock";
 import ParagraphQuestionBlock from "./blocks/ParagraphQuestionBlock";
 import MultipleChoiceQuestionBlock from "./blocks/MultipleChoiceQuestionBlock";
 
-import { Template, QuestionBlock } from "@/types/template";
+import { QuestionBlock } from "@/type/template";
 import { useTemplateBuilderStore } from "@/stores/TemplateBuilderStore";
 
 // Define the structure for draggable items
