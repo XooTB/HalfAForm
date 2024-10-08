@@ -29,7 +29,7 @@ const authOptions: NextAuthOptions = {
             id: response.user.id,
             email: response.user.email,
             name: response.user.name,
-            token: response.token,
+            accessToken: response.token || "",
           };
         }
 
@@ -38,12 +38,12 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, trigger, session }) {
+    async jwt({ token, user, account }) {
       if (account && user) {
         token.id = user.id;
-        token.email = "admin@admin.com";
-        token.role = "Administrator";
+        token.accessToken = user.accessToken;
       }
+
       return token;
     },
     async session({ session, token }) {
@@ -53,8 +53,8 @@ const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id as string,
           email: token.email as string,
-          role: token.role as string,
         },
+        accessToken: token.accessToken as string,
       };
     },
   },
