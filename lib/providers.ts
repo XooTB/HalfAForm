@@ -38,11 +38,24 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token }) {
-      if (token.id && typeof token.id === "string") {
-        console.log(token);
+    async jwt({ token, user, account, trigger, session }) {
+      if (account && user) {
+        token.id = user.id;
+        token.email = "admin@admin.com";
+        token.role = "Administrator";
       }
-      return session;
+      return token;
+    },
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id as string,
+          email: token.email as string,
+          role: token.role as string,
+        },
+      };
     },
   },
 };
