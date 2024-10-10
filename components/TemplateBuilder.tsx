@@ -137,7 +137,7 @@ const TemplateBuilder = () => {
   }
 
   return (
-    <div className="w-full px-[17%] flex flex-col gap-5 py-5">
+    <div className="w-full flex flex-col gap-5 py-5">
       {/* Template metadata input section */}
       <div className="flex flex-col gap-2">
         {/* Template Name */}
@@ -167,7 +167,7 @@ const TemplateBuilder = () => {
           onDragEnd={handleDragEnd}
         >
           {/* Sidebar with draggable items */}
-          <div className="border w-1/3 flex flex-col gap-2 px-2 py-3 rounded-lg h-full">
+          <div className="border w-1/3 flex flex-col gap-2 px-2 py-3 rounded-lg h-fit">
             <div className="flex flex-col px-1 pb-2">
               <h1 className="text-xl font-semibold">Pick Your Blocks</h1>
               <p className="text-xs text-gray-500">

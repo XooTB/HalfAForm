@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Template, QuestionBlock } from "@/types/template";
+import { Template, QuestionBlock } from "@/type/template";
 
 interface TemplateBuilderStore {
   name: string;
