@@ -33,18 +33,16 @@ const ParagraphQuestionBlock = ({ blockId }: Props) => {
     setError(null);
 
     const newValue = { [name]: e.target.value };
+    updateBlock(blockId, newValue);
 
     if (name === "question") {
       try {
-        schema.parse(newValue);
-        updateBlock(blockId, newValue);
+        schema.parse({ question: e.target.value });
       } catch (error) {
         if (error instanceof z.ZodError) {
           setError(error.errors[0].message);
         }
       }
-    } else {
-      updateBlock(blockId, newValue);
     }
   };
 

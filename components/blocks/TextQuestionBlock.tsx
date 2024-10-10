@@ -19,7 +19,7 @@ const schema = z.object({
 const TextQuestionBlock: React.FC<TextQuestionBlockProps> = ({
   blockId,
 }: TextQuestionBlockProps) => {
-  const { updateBlock, blocks } = useTemplateBuilderStore();
+  const { updateBlock } = useTemplateBuilderStore();
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
@@ -30,18 +30,16 @@ const TextQuestionBlock: React.FC<TextQuestionBlockProps> = ({
     setError(null);
 
     const newValue = { [name]: e.target.value };
+    updateBlock(blockId, newValue);
 
     if (name === "question") {
       try {
-        schema.parse(newValue);
-        updateBlock(blockId, newValue);
+        schema.parse({ question: e.target.value });
       } catch (error) {
         if (error instanceof z.ZodError) {
           setError(error.errors[0].message);
         }
       }
-    } else {
-      updateBlock(blockId, newValue);
     }
   };
 

@@ -34,7 +34,7 @@ const schema = z.object({
 });
 
 const MultipleChoiceQuestionBlock = ({ blockId }: Props) => {
-  const { updateBlock } = useTemplateBuilderStore();
+  const { updateBlock, blocks } = useTemplateBuilderStore();
 
   const [question, setQuestion] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -42,6 +42,7 @@ const MultipleChoiceQuestionBlock = ({ blockId }: Props) => {
   const [choices, setChoices] = useState<string[]>([""]);
   const [errors, setErrors] = useState<string[]>([]);
 
+  // Handle changes to the question or description
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     name: string
@@ -52,78 +53,95 @@ const MultipleChoiceQuestionBlock = ({ blockId }: Props) => {
     const newValue = { [name]: e.target.value };
 
     if (name === "question") {
-      validateAndUpdateBlock({
+      setQuestion(e.target.value);
+      updateBlock(blockId, newValue);
+      // Validate the updated data
+      validateData({
         ...newValue,
         options: choices,
         optionsType: choiceType,
       });
-      setQuestion(e.target.value);
     } else {
-      updateBlock(blockId, newValue);
       setDescription(e.target.value);
+      updateBlock(blockId, newValue);
     }
   };
 
+  // Add a new choice to the list
   const handleAddChoice = () => {
     if (!blockId) return;
     const updatedChoices = [...choices, ""];
     setChoices(updatedChoices);
-    validateAndUpdateBlock({
+    const data = {
       options: updatedChoices,
-      optionsType: choiceType,
+      optionsType: choiceType as "checkbox" | "radio" | "dropdown",
       question,
       description,
-    });
+    };
+    updateBlock(blockId, data);
+
+    validateData(data);
   };
 
+  // Remove a choice from the list
   const handleRemoveChoice = (index: number) => {
     if (!blockId) return;
     const updatedChoices = choices.filter((_, i) => i !== index);
     setChoices(updatedChoices);
-    validateAndUpdateBlock({
+    const data = {
       options: updatedChoices,
-      optionsType: choiceType,
+      optionsType: choiceType as "checkbox" | "radio" | "dropdown",
       question,
       description,
-    });
+    };
+    updateBlock(blockId, data);
+    validateData(data);
   };
 
+  // Update a specific choice in the list
   const handleChangeChoice = (index: number, value: string) => {
     if (!blockId) return;
     const updatedChoices = choices.map((choice, i) =>
       i === index ? value : choice
     );
     setChoices(updatedChoices);
-    validateAndUpdateBlock({
+    const data = {
       options: updatedChoices,
-      optionsType: choiceType,
+      optionsType: choiceType as "checkbox" | "radio" | "dropdown",
       question,
       description,
-    });
+    };
+    updateBlock(blockId, data);
+    validateData(data);
   };
 
+  // Change the type of choice (checkbox, radio, or dropdown)
   const handleChangeChoiceType = (value: string) => {
     if (!blockId) return;
     setChoiceType(value);
-    validateAndUpdateBlock({
+    const data = {
       options: choices,
       optionsType: value as "checkbox" | "radio" | "dropdown",
       question,
       description,
-    });
+    };
+    updateBlock(blockId, data);
+    validateData(data);
   };
 
-  const validateAndUpdateBlock = (data: any) => {
-    if (!blockId) return;
+  // Validate the data against the schema
+  const validateData = (data: any): boolean => {
+    if (!blockId) return false;
     setErrors([]);
 
     try {
       schema.parse(data);
-      updateBlock(blockId, data);
+      return true;
     } catch (err) {
       if (err instanceof z.ZodError) {
         setErrors(err.errors.map((error) => error.message));
       }
+      return false;
     }
   };
 
