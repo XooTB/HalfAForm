@@ -11,6 +11,7 @@ interface TemplateBuilderStore {
   updateBlock: (id: string, updates: Partial<QuestionBlock>) => void;
   removeBlock: (id: string) => void;
   reorderBlocks: (newOrder: string[]) => void;
+  getTemplate: () => Template;
 }
 
 export const useTemplateBuilderStore = create<TemplateBuilderStore>((set) => ({
@@ -36,4 +37,9 @@ export const useTemplateBuilderStore = create<TemplateBuilderStore>((set) => ({
         .map((id) => state.blocks.find((block) => block.id === id))
         .filter((block): block is QuestionBlock => block !== undefined),
     })),
+  getTemplate: (): Template => ({
+    name: useTemplateBuilderStore.getState().name,
+    description: useTemplateBuilderStore.getState().description,
+    blocks: useTemplateBuilderStore.getState().blocks,
+  }),
 }));

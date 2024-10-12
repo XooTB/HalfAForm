@@ -9,7 +9,7 @@ type Props = {};
 const Page = (props: Props) => {
   const { data: session } = useSession();
 
-  return <>{session ? <Dashboard /> : <h1>User is not logged in</h1>}</>;
+  return <Dashboard />;
 };
 
 export default Page;
