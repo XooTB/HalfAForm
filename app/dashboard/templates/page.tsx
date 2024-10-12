@@ -1,10 +1,22 @@
+"use client";
+
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import useGetTemplates from "@/hooks/useGetTemplates";
 import Link from "next/link";
-import React from "react";
+import TemplateCard from "@/components/cards/TemplateCard";
 
-type Props = {};
+const page = () => {
+  const { templates, isLoading, error, fetchTemplates } = useGetTemplates();
 
-const page = (props: Props) => {
+  useEffect(() => {
+    fetchTemplates();
+  }, []);
+
+  if (templates) {
+    console.log;
+  }
+
   return (
     <div className="w-full px-20">
       <div className="w-full flex flex-col gap-5 py-5">
@@ -19,8 +31,16 @@ const page = (props: Props) => {
             <Button>New Template</Button>
           </Link>
         </div>
-        <div className="w-full min-h-32 flex justify-center items-center border rounded-md">
-          <p>No templates found</p>
+        <div className="w-full min-h-32 flex justify-center items-center border rounded-md px-3 py-3">
+          {templates.length === 0 ? (
+            <p>No templates found</p>
+          ) : (
+            <div className="w-full grid grid-cols-3 gap-3">
+              {templates.map((template, index) => (
+                <TemplateCard key={index} template={template} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
