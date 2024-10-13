@@ -13,9 +13,11 @@ export const QuestionBlockSchema = z.object({
 export const TemplateSchema = z.object({
   name: z.string().min(1, { message: "Template name is required" }),
   author: z.string().optional(),
+  status: z.enum(["draft", "published"]).optional(),
   description: z
     .string()
     .min(1, { message: "Template description is required" }),
+  imageUrl: z.string().optional(),
   blocks: z
     .array(QuestionBlockSchema)
     .min(1, { message: "Atleast 1 question block is required" }),

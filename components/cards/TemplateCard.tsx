@@ -36,13 +36,16 @@ const TemplateCard = ({ template }: Props) => {
       </CardContent>
       <CardHeader>
         <CardTitle>{template.name}</CardTitle>
-        <CardDescription className="text-sm text-muted-foreground">
+        <CardDescription className="text-sm text-muted-foreground line-clamp-2">
           {template.description}
         </CardDescription>
       </CardHeader>
-      <CardFooter>
+      <CardFooter className="flex gap-2">
         <Link href={`/templates/${template.id}`} target="_blank">
           <Button variant="outline">View</Button>
+        </Link>
+        <Link href={`/dashboard/templates/edit/${template.id}`}>
+          <Button>Edit</Button>
         </Link>
       </CardFooter>
     </Card>

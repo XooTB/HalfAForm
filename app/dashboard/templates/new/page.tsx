@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import TemplateBuilder from "@/components/TemplateBuilder";
 import { Button } from "@/components/ui/button";
 import { useSaveTemplate } from "@/hooks/useSaveTemplate";
-
-import FormView from "@/components/sections/FormView";
 import PreviewModal from "@/components/sections/PreviewModal";
+import TemplateSettings from "@/components/sections/TemplateSettings";
 
 type Props = {};
 
@@ -34,7 +33,15 @@ const page = ({}: Props) => {
             )}
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => setIsPreviewModalOpen(true)}>Preview</Button>
+            <Button
+              onClick={() => setIsPreviewModalOpen(true)}
+              variant={"secondary"}
+            >
+              Preview
+            </Button>
+            <Button variant={"outline"}>
+              <TemplateSettings />
+            </Button>
             <Button onClick={saveTemplate}>Save Template</Button>
           </div>
         </div>

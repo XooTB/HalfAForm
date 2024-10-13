@@ -11,12 +11,19 @@ interface FormViewProps {
 }
 
 export default function FormView({ template }: FormViewProps) {
-  console.log(template);
+  const style = {
+    backgroundImage: template.imageUrl
+      ? `url(${template.imageUrl})`
+      : "url('/form_assets/form_bg_1.jpg')",
+  };
 
   return (
     <div className="w-full h-full">
       <ScrollArea className="h-[95%]">
-        <div className="flex flex-col justify-end gap-2 bg-[url('/form_assets/form_bg_1.jpg')] bg-cover bg-center bg-no-repeat h-[200px] px-5 py-5">
+        <div
+          style={style}
+          className="flex flex-col justify-end gap-2 bg-cover bg-center bg-no-repeat h-[200px] px-5 py-5"
+        >
           <h1 className="text-2xl font-bold text-white">{template.name}</h1>
           <p className="text-sm text-gray-500">{template.description}</p>
         </div>
