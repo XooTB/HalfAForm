@@ -64,6 +64,8 @@ const TemplateBuilder = () => {
   // State to keep track of items dropped into the template
   const [droppedItems, setDroppedItems] = useState<Item[]>([]);
 
+  console.log(droppedItems);
+
   // Access template builder store
   const {
     name,
@@ -94,7 +96,7 @@ const TemplateBuilder = () => {
       // Create a new block with a unique ID and default properties
       const Block: QuestionBlock = {
         ...items.find((item) => item.id === active.id)!,
-        id: `dropped-${active.id}-${Date.now()}`, // Generate a unique ID
+        id: `${active.id}_${Date.now()}`, // Generate a unique ID
         type: active.id as "short" | "paragraph" | "multipleChoice",
         question: "", // Initialize with an empty question
         required: true, // Set as required by default
