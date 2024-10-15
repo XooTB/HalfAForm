@@ -80,6 +80,16 @@ const page = () => {
     });
   };
 
+  const handleBlockDelete = (id: string) => {
+    setTemplateData((prev) => {
+      if (prev === null) return null;
+      return {
+        ...prev,
+        blocks: prev.blocks.filter((block) => block.id !== id),
+      };
+    });
+  };
+
   console.log(templateData);
 
   return (
@@ -113,6 +123,7 @@ const page = () => {
         <SortableContextWrapper
           blocks={templateData?.blocks || []}
           onBlocksReorder={handleBlocksReorder}
+          onBlockDelete={handleBlockDelete}
         >
           {templateData?.blocks.map((block) => {
             switch (block.type) {

@@ -20,6 +20,7 @@ type Props = {
   children: React.ReactNode;
   blocks: QuestionBlock[];
   onBlocksReorder: (newBlocks: QuestionBlock[]) => void;
+  onBlockDelete: (id: string) => void;
 };
 
 // SortableContextWrapper component for handling drag and drop functionality
@@ -27,6 +28,7 @@ const SortableContextWrapper = ({
   children,
   blocks,
   onBlocksReorder,
+  onBlockDelete,
 }: Props) => {
   // Set up sensors for drag and drop interactions
   const sensors = useSensors(
@@ -65,7 +67,11 @@ const SortableContextWrapper = ({
         {React.Children.map(children, (child, index) => {
           if (React.isValidElement(child)) {
             return (
-              <SortableBlock key={blocks[index].id} id={blocks[index].id}>
+              <SortableBlock
+                key={blocks[index].id}
+                id={blocks[index].id}
+                onDelete={onBlockDelete}
+              >
                 {child}
               </SortableBlock>
             );
