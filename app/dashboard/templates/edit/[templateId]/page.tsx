@@ -14,6 +14,15 @@ import MultiChoice from "@/components/blocks/MultiChoice";
 import SortableContext from "@/components/dnd/SortableContext";
 import SortableContextWrapper from "@/components/dnd/SortableContext";
 import { arrayMove } from "@dnd-kit/sortable";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { PlusCircle } from "lucide-react";
 
 // Main component for editing a template
 const page = () => {
@@ -90,10 +99,26 @@ const page = () => {
     });
   };
 
-  console.log(templateData);
+  const handleAddBlock = (type: string) => {
+    setTemplateData((prev) => {
+      if (prev === null) return null;
+      const timestamp = Date.now();
+      const newBlock: QuestionBlock = {
+        id: `${type}_${timestamp}`,
+        type: type as "short" | "paragraph" | "multipleChoice",
+        question: "",
+        required: false,
+        options: type === "multipleChoice" ? [] : undefined,
+      };
+      return {
+        ...prev,
+        blocks: [...prev.blocks, newBlock],
+      };
+    });
+  };
 
   return (
-    <div className="w-full min-h-[70vh] px-10">
+    <div className="w-full min-h-[70vh] px-10 pb-10">
       {/* Template header with background image */}
       <div
         style={style}
@@ -159,6 +184,23 @@ const page = () => {
             }
           })}
         </SortableContextWrapper>
+
+        {/* Add new block button with dropdown */}
+        <div className="flex items-center gap-2 mt-4">
+          <Select onValueChange={handleAddBlock}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Add new block" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="short">Short Answer</SelectItem>
+              <SelectItem value="paragraph">Paragraph</SelectItem>
+              <SelectItem value="multipleChoice">Multiple Choice</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button variant="outline" size="icon">
+            <PlusCircle className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );
