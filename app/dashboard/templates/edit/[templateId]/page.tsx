@@ -11,6 +11,9 @@ import TextQuestion from "@/components/blocks/TextQuestion";
 import ParagraphQuestion from "@/components/blocks/ParagraphQuestion";
 import MultipleChoice from "@/components/blocks/MultipleChoice";
 import MultiChoice from "@/components/blocks/MultiChoice";
+import SortableContext from "@/components/dnd/SortableContext";
+import SortableContextWrapper from "@/components/dnd/SortableContext";
+import { arrayMove } from "@dnd-kit/sortable";
 
 // Main component for editing a template
 const page = () => {
@@ -70,6 +73,13 @@ const page = () => {
     });
   };
 
+  const handleBlocksReorder = (newBlocks: QuestionBlock[]) => {
+    setTemplateData((prev) => {
+      if (prev === null) return null;
+      return { ...prev, blocks: newBlocks };
+    });
+  };
+
   console.log(templateData);
 
   return (
@@ -99,40 +109,45 @@ const page = () => {
         </div>
       </div>
       {/* Question blocks */}
-      <div className="flex flex-col gap-3">
-        {templateData?.blocks.map((block) => {
-          switch (block.type) {
-            case "short":
-              return (
-                <TextQuestion
-                  key={block.id}
-                  block={block}
-                  editMode={true}
-                  handleBlockChange={handleBlockChange}
-                />
-              );
-            case "paragraph":
-              return (
-                <ParagraphQuestion
-                  key={block.id}
-                  block={block}
-                  editMode={true}
-                  handleBlockChange={handleBlockChange}
-                />
-              );
-            case "multipleChoice":
-              return (
-                <MultiChoice
-                  key={block.id}
-                  block={block}
-                  editMode={true}
-                  handleBlockChange={handleBlockChange}
-                />
-              );
-            default:
-              return null;
-          }
-        })}
+      <div className="flex flex-col gap-3 pl-8">
+        <SortableContextWrapper
+          blocks={templateData?.blocks || []}
+          onBlocksReorder={handleBlocksReorder}
+        >
+          {templateData?.blocks.map((block) => {
+            switch (block.type) {
+              case "short":
+                return (
+                  <TextQuestion
+                    key={block.id}
+                    block={block}
+                    editMode={true}
+                    handleBlockChange={handleBlockChange}
+                  />
+                );
+              case "paragraph":
+                return (
+                  <ParagraphQuestion
+                    key={block.id}
+                    block={block}
+                    editMode={true}
+                    handleBlockChange={handleBlockChange}
+                  />
+                );
+              case "multipleChoice":
+                return (
+                  <MultiChoice
+                    key={block.id}
+                    block={block}
+                    editMode={true}
+                    handleBlockChange={handleBlockChange}
+                  />
+                );
+              default:
+                return null;
+            }
+          })}
+        </SortableContextWrapper>
       </div>
     </div>
   );
