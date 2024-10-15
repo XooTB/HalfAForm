@@ -26,12 +26,10 @@ import { PlusCircle } from "lucide-react";
 
 // Main component for editing a template
 const page = () => {
-  // Extract templateId from URL params
   const { templateId } = useParams();
-  // Custom hook to fetch and manage template data
   const { template, isLoading, error, getTemplate } = useTemplate();
-  // Local state to store and modify template data
   const [templateData, setTemplateData] = useState<Template | null>(null);
+  const [selectedBlockType, setSelectedBlockType] = useState<string>("");
 
   console.log(templateData);
 
@@ -100,6 +98,7 @@ const page = () => {
   };
 
   const handleAddBlock = (type: string) => {
+    setSelectedBlockType(type);
     setTemplateData((prev) => {
       if (prev === null) return null;
       const timestamp = Date.now();
@@ -115,6 +114,12 @@ const page = () => {
         blocks: [...prev.blocks, newBlock],
       };
     });
+  };
+
+  const handleAddButtonClick = () => {
+    if (selectedBlockType) {
+      handleAddBlock(selectedBlockType);
+    }
   };
 
   return (
@@ -197,7 +202,12 @@ const page = () => {
               <SelectItem value="multipleChoice">Multiple Choice</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleAddButtonClick}
+            disabled={!selectedBlockType}
+          >
             <PlusCircle className="h-4 w-4" />
           </Button>
         </div>
