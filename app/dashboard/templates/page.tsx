@@ -8,6 +8,7 @@ import TemplateCard from "@/components/cards/TemplateCard";
 
 const page = () => {
   const { templates, isLoading, error, fetchTemplates } = useGetTemplates();
+  console.log(templates);
 
   useEffect(() => {
     fetchTemplates();
@@ -37,6 +38,7 @@ const page = () => {
           ) : (
             <div className="w-full grid grid-cols-3 gap-3">
               {templates.map((template, index) => (
+                // @ts-ignore
                 <TemplateCard key={index} template={template} />
               ))}
             </div>
