@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import useTemplate from "@/hooks/useTemplate";
 import Image from "next/image";
@@ -23,15 +23,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { PlusCircle } from "lucide-react";
+import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
+import { Upload } from "lucide-react";
 
 // Main component for editing a template
-const page = () => {
+const Page = () => {
   const { templateId } = useParams();
   const { template, isLoading, error, getTemplate } = useTemplate();
   const [templateData, setTemplateData] = useState<Template | null>(null);
   const [selectedBlockType, setSelectedBlockType] = useState<string>("");
 
-  console.log(templateData);
+  const {
+    isUploading,
+    error: uploadError,
+    uploadImage,
+    img,
+  } = useCloudinaryUpload();
 
   // Fetch template data when component mounts or templateId changes
   useEffect(() => {
@@ -45,6 +52,17 @@ const page = () => {
     }
   }, [template]);
 
+  // Update local state when image is uploaded
+  useEffect(() => {
+    if (img) {
+      // @ts-ignore
+      setTemplateData((prev) => {
+        if (!prev) return { image: img };
+        return { ...prev, image: img };
+      });
+    }
+  }, [img]);
+
   // Loading and error states
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -52,8 +70,10 @@ const page = () => {
 
   // Style object for background image
   const style = {
-    backgroundImage: template?.imageUrl
-      ? `url(${template.imageUrl})`
+    backgroundImage: img
+      ? `url(${img})`
+      : template?.image
+      ? `url(${template.image})`
       : "url(/form_assets/form_bg_1.jpg)",
     backgroundSize: "cover",
     backgroundPosition: "center",
@@ -80,23 +100,28 @@ const page = () => {
     });
   };
 
+  // Handler for reordering blocks within the template
   const handleBlocksReorder = (newBlocks: QuestionBlock[]) => {
     setTemplateData((prev) => {
       if (prev === null) return null;
+      // Update the template data with the new block order
       return { ...prev, blocks: newBlocks };
     });
   };
 
+  // Handler for deleting a block from the template
   const handleBlockDelete = (id: string) => {
     setTemplateData((prev) => {
       if (prev === null) return null;
       return {
         ...prev,
+        // Filter out the block with the matching id
         blocks: prev.blocks.filter((block) => block.id !== id),
       };
     });
   };
 
+  // Handler for adding a new block to the template
   const handleAddBlock = (type: string) => {
     setSelectedBlockType(type);
     setTemplateData((prev) => {
@@ -116,9 +141,20 @@ const page = () => {
     });
   };
 
+  // Handler for adding a new block to the template
   const handleAddButtonClick = () => {
     if (selectedBlockType) {
       handleAddBlock(selectedBlockType);
+    }
+  };
+
+  // Handler for uploading a new image to the template
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      await uploadImage(file);
     }
   };
 
@@ -126,9 +162,36 @@ const page = () => {
     <div className="w-full min-h-[70vh] px-10 pb-10">
       {/* Template header with background image */}
       <div
-        style={style}
+        style={{
+          ...style,
+          position: "relative",
+        }}
         className="w-full h-[32vh] flex flex-col justify-end py-5 px-5"
       >
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+          id="image-upload"
+        />
+        <label
+          htmlFor="image-upload"
+          className="absolute top-2 right-2 cursor-pointer"
+        >
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled={isUploading}
+            onClick={() => document.getElementById("image-upload")?.click()}
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            {isUploading ? "Uploading..." : "Change Image"}
+          </Button>
+        </label>
+        {uploadError && (
+          <p className="text-red-500 text-sm mt-2">{uploadError}</p>
+        )}
         <div className="bg-black/60 w-full p-5 rounded-md h-[60%]">
           {/* Template name input */}
           <Input
@@ -216,4 +279,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

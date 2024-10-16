@@ -17,7 +17,7 @@ export const TemplateSchema = z.object({
   description: z
     .string()
     .min(1, { message: "Template description is required" }),
-  imageUrl: z.string().optional(),
+  image: z.string().optional(),
   blocks: z
     .array(QuestionBlockSchema)
     .min(1, { message: "Atleast 1 question block is required" }),

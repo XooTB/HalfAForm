@@ -5,6 +5,7 @@ export const useCloudinaryUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { setImageUrl } = useTemplateBuilderStore();
+  const [img, setImg] = useState<string | null>(null);
 
   const uploadImage = async (file: File) => {
     setIsUploading(true);
@@ -29,6 +30,7 @@ export const useCloudinaryUpload = () => {
 
       const data = await response.json();
       setImageUrl(data.secure_url);
+      setImg(data.secure_url);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An error occurred during upload"
@@ -38,5 +40,5 @@ export const useCloudinaryUpload = () => {
     }
   };
 
-  return { isUploading, error, uploadImage };
+  return { isUploading, error, uploadImage, img };
 };
