@@ -1,37 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import useTemplate from "@/hooks/useTemplate";
-import Image from "next/image";
+import { Upload } from "lucide-react";
 import { QuestionBlock, Template } from "@/type/template";
+import useTemplate from "@/hooks/useTemplate";
+import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import TextQuestion from "@/components/blocks/TextQuestion";
-import ParagraphQuestion from "@/components/blocks/ParagraphQuestion";
-import MultipleChoice from "@/components/blocks/MultipleChoice";
-import MultiChoice from "@/components/blocks/MultiChoice";
-import SortableContext from "@/components/dnd/SortableContext";
-import SortableContextWrapper from "@/components/dnd/SortableContext";
-import { arrayMove } from "@dnd-kit/sortable";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { PlusCircle } from "lucide-react";
-import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
-import { Upload } from "lucide-react";
+import { TextQuestionEdit } from "@/components/blocks/TextQuestion";
+import ParagraphQuestion from "@/components/blocks/ParagraphQuestion";
+import MultiChoice from "@/components/blocks/MultiChoice";
+import SortableContextWrapper from "@/components/dnd/SortableContext";
+import AddBlockButton from "@/components/sections/AddBlockSection";
 
 // Main component for editing a template
 const Page = () => {
   const { templateId } = useParams();
   const { template, isLoading, error, getTemplate } = useTemplate();
   const [templateData, setTemplateData] = useState<Template | null>(null);
-  const [selectedBlockType, setSelectedBlockType] = useState<string>("");
+
+  console.log(templateData);
 
   const {
     isUploading,
@@ -123,7 +113,6 @@ const Page = () => {
 
   // Handler for adding a new block to the template
   const handleAddBlock = (type: string) => {
-    setSelectedBlockType(type);
     setTemplateData((prev) => {
       if (prev === null) return null;
       const timestamp = Date.now();
@@ -139,13 +128,6 @@ const Page = () => {
         blocks: [...prev.blocks, newBlock],
       };
     });
-  };
-
-  // Handler for adding a new block to the template
-  const handleAddButtonClick = () => {
-    if (selectedBlockType) {
-      handleAddBlock(selectedBlockType);
-    }
   };
 
   // Handler for uploading a new image to the template
@@ -164,9 +146,8 @@ const Page = () => {
       <div
         style={{
           ...style,
-          position: "relative",
         }}
-        className="w-full h-[32vh] flex flex-col justify-end py-5 px-5"
+        className="w-full h-[32vh] flex flex-col justify-end py-5 px-5 relative"
       >
         <Input
           type="file"
@@ -222,10 +203,9 @@ const Page = () => {
             switch (block.type) {
               case "short":
                 return (
-                  <TextQuestion
+                  <TextQuestionEdit
                     key={block.id}
                     block={block}
-                    editMode={true}
                     handleBlockChange={handleBlockChange}
                   />
                 );
@@ -252,28 +232,8 @@ const Page = () => {
             }
           })}
         </SortableContextWrapper>
-
         {/* Add new block button with dropdown */}
-        <div className="flex items-center gap-2 mt-4">
-          <Select onValueChange={handleAddBlock}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Add new block" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="short">Short Answer</SelectItem>
-              <SelectItem value="paragraph">Paragraph</SelectItem>
-              <SelectItem value="multipleChoice">Multiple Choice</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={handleAddButtonClick}
-            disabled={!selectedBlockType}
-          >
-            <PlusCircle className="h-4 w-4" />
-          </Button>
-        </div>
+        <AddBlockButton onAddBlock={handleAddBlock} />
       </div>
     </div>
   );
