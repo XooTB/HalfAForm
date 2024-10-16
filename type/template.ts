@@ -21,8 +21,9 @@ export const TemplateSchema = z.object({
   blocks: z
     .array(QuestionBlockSchema)
     .min(1, { message: "Atleast 1 question block is required" }),
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  version: z.number().optional(),
 });
 
 export type QuestionBlock = z.infer<typeof QuestionBlockSchema>;

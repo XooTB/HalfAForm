@@ -18,7 +18,14 @@ import AddBlockButton from "@/components/sections/AddBlockSection";
 // Main component for editing a template
 const Page = () => {
   const { templateId } = useParams();
-  const { template, isLoading, error, getTemplate } = useTemplate();
+  const {
+    template,
+    isLoading,
+    error,
+    getTemplate,
+    updateTemplate,
+    validationErrors,
+  } = useTemplate();
   const [templateData, setTemplateData] = useState<Template | null>(null);
 
   console.log(templateData);
@@ -140,102 +147,124 @@ const Page = () => {
     }
   };
 
-  return (
-    <div className="w-full min-h-[70vh] px-10 pb-10">
-      {/* Template header with background image */}
-      <div
-        style={{
-          ...style,
-        }}
-        className="w-full h-[32vh] flex flex-col justify-end py-5 px-5 relative"
-      >
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-          id="image-upload"
-        />
-        <label
-          htmlFor="image-upload"
-          className="absolute top-2 right-2 cursor-pointer"
-        >
-          <Button
-            variant="secondary"
-            size="sm"
-            disabled={isUploading}
-            onClick={() => document.getElementById("image-upload")?.click()}
-          >
-            <Upload className="mr-2 h-4 w-4" />
-            {isUploading ? "Uploading..." : "Change Image"}
-          </Button>
-        </label>
-        {uploadError && (
-          <p className="text-red-500 text-sm mt-2">{uploadError}</p>
-        )}
-        <div className="bg-black/60 w-full p-5 rounded-md h-[60%]">
-          {/* Template name input */}
-          <Input
-            type="text"
-            className={`text-white text-2xl font-bold bg-transparent w-full border-0
-               focus-visible:border`}
-            defaultValue={templateData?.name}
-            onChange={handleInputChange("name")}
-          />
-          {/* Template description textarea */}
-          <Textarea
-            className={`text-white text-sm bg-transparent w-full border-0 resize-none
-               focus-visible:border`}
-            defaultValue={templateData?.description}
-            onChange={handleInputChange("description")}
-            rows={4}
-          />
+  const handleUpdateTemplate = () => {
+    if (templateData) {
+      updateTemplate(templateId as string, templateData);
+    }
+  };
+
+  if (templateData)
+    return (
+      <>
+        <div className="flex justify-between items-center w-full px-10 py-5">
+          <div className="flex flex-col gap-1">
+            <p className="text-2xl font-bold">Edit Template</p>
+            <div className="flex flex-col text-xs">
+              {validationErrors.map((error, index) => (
+                <p className="text-red-500" key={index}>
+                  {error}
+                </p>
+              ))}
+            </div>
+          </div>
+          <Button onClick={handleUpdateTemplate}>Update Template</Button>
         </div>
-      </div>
-      {/* Question blocks */}
-      <div className="flex flex-col gap-3 pl-8">
-        <SortableContextWrapper
-          blocks={templateData?.blocks || []}
-          onBlocksReorder={handleBlocksReorder}
-          onBlockDelete={handleBlockDelete}
-        >
-          {templateData?.blocks.map((block) => {
-            switch (block.type) {
-              case "short":
-                return (
-                  <TextQuestionEdit
-                    key={block.id}
-                    block={block}
-                    handleBlockChange={handleBlockChange}
-                  />
-                );
-              case "paragraph":
-                return (
-                  <ParagraphQuestionEdit
-                    key={block.id}
-                    block={block}
-                    handleBlockChange={handleBlockChange}
-                  />
-                );
-              case "multipleChoice":
-                return (
-                  <MultiChoice
-                    key={block.id}
-                    block={block}
-                    editMode={true}
-                    handleBlockChange={handleBlockChange}
-                  />
-                );
-              default:
-                return null;
-            }
-          })}
-        </SortableContextWrapper>
-        {/* Add new block button with dropdown */}
-        <AddBlockButton onAddBlock={handleAddBlock} />
-      </div>
-    </div>
-  );
+        <div className="w-full min-h-[70vh] px-10 pb-10">
+          {/* Template header with background image */}
+          <div
+            style={{
+              ...style,
+            }}
+            className="w-full h-[32vh] flex flex-col justify-end py-5 px-5 relative"
+          >
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+              id="image-upload"
+            />
+            <label
+              htmlFor="image-upload"
+              className="absolute top-2 right-2 cursor-pointer"
+            >
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={isUploading}
+                onClick={() => document.getElementById("image-upload")?.click()}
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                {isUploading ? "Uploading..." : "Change Image"}
+              </Button>
+            </label>
+            {uploadError && (
+              <p className="text-red-500 text-sm mt-2">{uploadError}</p>
+            )}
+            <div className="bg-black/60 w-full p-5 rounded-md h-[60%]">
+              {/* Template name input */}
+              <Input
+                type="text"
+                className={`text-white text-2xl font-bold bg-transparent w-full border-0
+              focus-visible:border`}
+                defaultValue={templateData?.name}
+                onChange={handleInputChange("name")}
+              />
+              {/* Template description textarea */}
+              <Textarea
+                className={`text-white text-sm bg-transparent w-full border-0 resize-none
+              focus-visible:border`}
+                defaultValue={templateData?.description}
+                onChange={handleInputChange("description")}
+                rows={4}
+              />
+            </div>
+          </div>
+          {/* Question blocks */}
+          <div className="flex flex-col gap-3 pl-8">
+            <SortableContextWrapper
+              blocks={templateData?.blocks || []}
+              onBlocksReorder={handleBlocksReorder}
+              onBlockDelete={handleBlockDelete}
+            >
+              {templateData?.blocks.map((block) => {
+                switch (block.type) {
+                  case "short":
+                    return (
+                      <TextQuestionEdit
+                        key={block.id}
+                        block={block}
+                        handleBlockChange={handleBlockChange}
+                      />
+                    );
+                  case "paragraph":
+                    return (
+                      <ParagraphQuestionEdit
+                        key={block.id}
+                        block={block}
+                        handleBlockChange={handleBlockChange}
+                      />
+                    );
+                  case "multipleChoice":
+                    return (
+                      <MultiChoice
+                        key={block.id}
+                        block={block}
+                        editMode={true}
+                        handleBlockChange={handleBlockChange}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })}
+            </SortableContextWrapper>
+            {/* Add new block button with dropdown */}
+            <AddBlockButton onAddBlock={handleAddBlock} />
+          </div>
+        </div>
+      </>
+    );
 };
 
 export default Page;
