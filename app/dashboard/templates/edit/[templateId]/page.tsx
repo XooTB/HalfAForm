@@ -9,8 +9,8 @@ import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { TextQuestionEdit } from "@/components/blocks/TextQuestion";
-import ParagraphQuestion from "@/components/blocks/ParagraphQuestion";
+import { TextQuestionEdit } from "@/components/blocks/TextQuestionBlock";
+import { ParagraphQuestionEdit } from "@/components/blocks/ParagraphQuestionBlock";
 import MultiChoice from "@/components/blocks/MultiChoice";
 import SortableContextWrapper from "@/components/dnd/SortableContext";
 import AddBlockButton from "@/components/sections/AddBlockSection";
@@ -211,10 +211,9 @@ const Page = () => {
                 );
               case "paragraph":
                 return (
-                  <ParagraphQuestion
+                  <ParagraphQuestionEdit
                     key={block.id}
                     block={block}
-                    editMode={true}
                     handleBlockChange={handleBlockChange}
                   />
                 );

@@ -1,8 +1,8 @@
 "use client";
 
 import { Template } from "@/type/template";
-import TextQuestion from "../blocks/TextQuestion";
-import ParagraphQuestion from "../blocks/ParagraphQuestion";
+import { TextQuestionDisplay } from "../blocks/TextQuestionBlock";
+import { ParagraphQuestionDisplay } from "../blocks/ParagraphQuestionBlock";
 import MultipleChoice from "../blocks/MultipleChoice";
 import { ScrollArea } from "../ui/scroll-area";
 
@@ -12,8 +12,8 @@ interface FormViewProps {
 
 export default function FormView({ template }: FormViewProps) {
   const style = {
-    backgroundImage: template.imageUrl
-      ? `url(${template.imageUrl})`
+    backgroundImage: template.image
+      ? `url(${template.image})`
       : "url('/form_assets/form_bg_1.jpg')",
   };
 
@@ -32,9 +32,11 @@ export default function FormView({ template }: FormViewProps) {
             template.blocks.map((block) => {
               switch (block.type) {
                 case "short":
-                  return <TextQuestion key={block.id} block={block} />;
+                  return <TextQuestionDisplay key={block.id} block={block} />;
                 case "paragraph":
-                  return <ParagraphQuestion key={block.id} block={block} />;
+                  return (
+                    <ParagraphQuestionDisplay key={block.id} block={block} />
+                  );
                 case "multipleChoice":
                   return <MultipleChoice key={block.id} block={block} />;
               }

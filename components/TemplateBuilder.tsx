@@ -16,15 +16,13 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
 import SortableItem from "./SortableItem";
 import Draggable from "./Draggable";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { MessageSquareText, Text, Circle } from "lucide-react";
-
-import TextQuestionBlock from "./blocks/TextQuestionBlock";
-import ParagraphQuestionBlock from "./blocks/ParagraphQuestionBlock";
+import { TextQuestionBlock } from "./blocks/TextQuestionBlock";
+import { ParagraphQuestionBlock } from "./blocks/ParagraphQuestionBlock";
 import MultipleChoiceQuestionBlock from "./blocks/MultipleChoiceQuestionBlock";
 
 import { QuestionBlock } from "@/type/template";
@@ -63,8 +61,6 @@ const items: Item[] = [
 const TemplateBuilder = () => {
   // State to keep track of items dropped into the template
   const [droppedItems, setDroppedItems] = useState<Item[]>([]);
-
-  console.log(droppedItems);
 
   // Access template builder store
   const {
