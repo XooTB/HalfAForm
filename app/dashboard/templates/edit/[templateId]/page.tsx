@@ -14,6 +14,7 @@ import { ParagraphQuestionEdit } from "@/components/blocks/ParagraphQuestionBloc
 import MultiChoice from "@/components/blocks/MultiChoice";
 import SortableContextWrapper from "@/components/dnd/SortableContext";
 import AddBlockButton from "@/components/sections/AddBlockSection";
+import StatusToggle from "@/components/StatusToggle";
 
 // Main component for editing a template
 const Page = () => {
@@ -153,6 +154,13 @@ const Page = () => {
     }
   };
 
+  const handleStatusChange = (status: string) => {
+    setTemplateData((prev) => {
+      if (prev === null) return null;
+      return { ...prev, status: status as "draft" | "published" | undefined };
+    });
+  };
+
   if (templateData)
     return (
       <>
@@ -167,7 +175,13 @@ const Page = () => {
               ))}
             </div>
           </div>
-          <Button onClick={handleUpdateTemplate}>Update Template</Button>
+          <div className="flex gap-2">
+            <StatusToggle
+              status={templateData.status}
+              setStatus={handleStatusChange}
+            />
+            <Button onClick={handleUpdateTemplate}>Update Template</Button>
+          </div>
         </div>
         <div className="w-full min-h-[70vh] px-10 pb-10">
           {/* Template header with background image */}
