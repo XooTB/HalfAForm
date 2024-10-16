@@ -6,12 +6,21 @@ import { Button } from "@/components/ui/button";
 import { useSaveTemplate } from "@/hooks/useSaveTemplate";
 import PreviewModal from "@/components/sections/PreviewModal";
 import TemplateSettings from "@/components/sections/TemplateSettings";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const page = ({}: Props) => {
-  const { saveTemplate, error } = useSaveTemplate();
+  const { saveTemplate, error, isLoading } = useSaveTemplate();
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+  const router = useRouter();
+
+  const handleSaveTemplate = async () => {
+    const savedTemplate = await saveTemplate();
+    if (savedTemplate) {
+      router.push(`/dashboard/templates`);
+    }
+  };
 
   return (
     <>
@@ -42,7 +51,9 @@ const page = ({}: Props) => {
             <Button variant={"outline"}>
               <TemplateSettings />
             </Button>
-            <Button onClick={saveTemplate}>Save Template</Button>
+            <Button onClick={handleSaveTemplate} disabled={isLoading}>
+              {isLoading ? "Saving..." : "Save Template"}
+            </Button>
           </div>
         </div>
         <TemplateBuilder />

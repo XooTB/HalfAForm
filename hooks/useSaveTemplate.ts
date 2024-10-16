@@ -18,12 +18,13 @@ const messageBuilder = createMessageBuilder({
 
 export const useSaveTemplate = () => {
   const [error, setError] = useState<string[]>([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   const { name, description, blocks } = useTemplateBuilderStore();
   const { data: session } = useSession();
 
   const saveTemplate = async () => {
     if (!session) return;
+    setIsLoading(true);
     setError([]);
 
     try {
@@ -41,6 +42,7 @@ export const useSaveTemplate = () => {
             .slice(1)
             .map((err) => err.trim())
         );
+        setIsLoading(false);
         return;
       }
 
@@ -79,8 +81,10 @@ export const useSaveTemplate = () => {
         setError((prev) => [...prev, "An unexpected error occurred"]);
       }
       return null;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { saveTemplate, error };
+  return { saveTemplate, error, isLoading };
 };
