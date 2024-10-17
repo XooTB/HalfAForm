@@ -4,7 +4,7 @@ import { useState } from "react";
 export const useCloudinaryUpload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { setImageUrl } = useTemplateBuilderStore();
+  const { setImage } = useTemplateBuilderStore();
   const [img, setImg] = useState<string | null>(null);
 
   const uploadImage = async (file: File) => {
@@ -29,7 +29,7 @@ export const useCloudinaryUpload = () => {
       }
 
       const data = await response.json();
-      setImageUrl(data.secure_url);
+      setImage(data.secure_url);
       setImg(data.secure_url);
     } catch (err) {
       setError(

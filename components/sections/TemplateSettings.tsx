@@ -25,7 +25,7 @@ import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
 type Props = {};
 
 const TemplateSettings = () => {
-  const { status, setStatus, setImageUrl, getTemplate, imageUrl } =
+  const { status, setStatus, setImage, getTemplate, image } =
     useTemplateBuilderStore();
   const { isUploading, error, uploadImage } = useCloudinaryUpload();
 
@@ -37,10 +37,10 @@ const TemplateSettings = () => {
   };
 
   useEffect(() => {
-    if (imageUrl) {
-      setImageUrl(imageUrl);
+    if (image) {
+      setImage(image);
     }
-  }, [imageUrl, setImageUrl]);
+  }, [image, setImage]);
 
   return (
     <Sheet>
@@ -82,7 +82,7 @@ const TemplateSettings = () => {
               {error && <p className="text-red-500">{error}</p>}
               <div className="w-full">
                 <Image
-                  src={imageUrl || "/placeholders/template_img.png"}
+                  src={image || "/placeholders/template_img.png"}
                   alt="Feature Image"
                   className="object-cover w-full h-full border rounded-lg"
                   width={100}
