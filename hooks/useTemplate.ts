@@ -9,6 +9,8 @@ import {
   ErrorOptions,
   fromError,
 } from "zod-validation-error";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const messageBuilder = createMessageBuilder({
   includePath: false,
@@ -21,6 +23,7 @@ const useTemplate = () => {
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const { data: session } = useSession();
+  const router = useRouter();
 
   const getTemplate = async (templateId: string) => {
     setIsLoading(true);
@@ -117,6 +120,37 @@ const useTemplate = () => {
     }
   };
 
+  const deleteTemplate = async (templateId: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/templates/${templateId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        }
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error);
+      }
+
+      setTemplate(null);
+      toast.success("Template successfully deleted!");
+      router.push("/dashboard/templates");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     template,
     isLoading,
@@ -124,6 +158,7 @@ const useTemplate = () => {
     validationErrors,
     getTemplate,
     updateTemplate,
+    deleteTemplate,
   };
 };
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Upload } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 import { QuestionBlock, Template } from "@/type/template";
 import useTemplate from "@/hooks/useTemplate";
 import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
@@ -15,6 +15,7 @@ import MultiChoice from "@/components/blocks/MultiChoice";
 import SortableContextWrapper from "@/components/dnd/SortableContext";
 import AddBlockButton from "@/components/sections/AddBlockSection";
 import StatusToggle from "@/components/StatusToggle";
+import DeleteDialogue from "@/components/sections/DeleteDialogue";
 
 // Main component for editing a template
 const Page = () => {
@@ -25,11 +26,10 @@ const Page = () => {
     error,
     getTemplate,
     updateTemplate,
+    deleteTemplate,
     validationErrors,
   } = useTemplate();
   const [templateData, setTemplateData] = useState<Template | null>(null);
-
-  console.log(templateData);
 
   const {
     isUploading,
@@ -161,6 +161,10 @@ const Page = () => {
     });
   };
 
+  const handleDeleteTemplate = async () => {
+    await deleteTemplate(templateId as string);
+  };
+
   if (templateData)
     return (
       <>
@@ -181,6 +185,16 @@ const Page = () => {
               setStatus={handleStatusChange}
             />
             <Button onClick={handleUpdateTemplate}>Update Template</Button>
+            <Button
+              variant="outline"
+              className="hover:bg-red-500 hover:text-white px-1"
+              size="icon"
+            >
+              <DeleteDialogue
+                trigger={<Trash2 />}
+                onDelete={handleDeleteTemplate}
+              />
+            </Button>
           </div>
         </div>
         <div className="w-full min-h-[70vh] px-10 pb-10">
