@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import SessionWrapper from "@/components/SessionWrapper";
 import NavBar from "@/components/NavBar";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <SessionWrapper>
             <NavBar />
             {children}
+            <Toaster />
           </SessionWrapper>
         </ThemeProvider>
       </body>
