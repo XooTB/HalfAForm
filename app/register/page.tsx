@@ -102,7 +102,7 @@ const page = ({}: Props) => {
         </div>
         <p className="text-sm text-gray-500 pt-5">
           Already have an account?{" "}
-          <Link href="/login" className="font-bold">
+          <Link href="/login" className="font-bold hover:underline">
             Login
           </Link>
         </p>
