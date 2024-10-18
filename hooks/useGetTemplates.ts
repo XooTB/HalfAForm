@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Template } from "@/type/template";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const useGetTemplates = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,6 +20,17 @@ const useGetTemplates = () => {
           Authorization: `Bearer ${session?.accessToken}`,
         },
       });
+
+      if (!res.ok) {
+        const errorMessage = await res.json();
+        console.log(errorMessage);
+
+        if (errorMessage.error === "jwt expired") {
+          signOut();
+        }
+
+        throw new Error("Failed to fetch templates");
+      }
 
       const data = await res.json();
 
