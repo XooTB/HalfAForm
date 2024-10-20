@@ -58,6 +58,8 @@ const useTemplate = () => {
   const validateTemplate = (template: Template): boolean => {
     try {
       const validation = TemplateSchema.safeParse(template);
+      console.log(fromError(validation.error, { messageBuilder }));
+
       if (!validation.success) {
         const errors = fromError(validation.error, { messageBuilder });
         setValidationErrors(
@@ -68,6 +70,7 @@ const useTemplate = () => {
         );
         return false;
       }
+
       return true;
     } catch (error: any) {
       if (error instanceof ZodError) {

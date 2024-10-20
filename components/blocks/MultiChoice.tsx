@@ -6,7 +6,6 @@ import React from "react";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
 import {
   Select,
   SelectItem,

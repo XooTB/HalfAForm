@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { QuestionBlock } from "@/type/template";
 import { Checkbox } from "../ui/checkbox";
@@ -11,40 +11,84 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Answer } from "@/type/form";
 
-type Props = {
+interface CheckBoxItemProps {
+  option: string;
+  handleCheck?: (option: string) => void;
+}
+
+interface MultipleChoiceDisplayProps {
   block: QuestionBlock;
-};
+  onAnswerChange: (answer: Answer) => void;
+}
 
-const CheckBoxItem = ({ option }: { option: string }) => {
+const CheckBoxItem = ({ option, handleCheck }: CheckBoxItemProps) => {
   return (
     <div className="flex gap-2 items-center">
-      <Checkbox />
-      <label className="capitalize">{option}</label>
+      <Checkbox onCheckedChange={() => handleCheck?.(option)} />
+      <label className="text-bas">{option}</label>
     </div>
   );
 };
 
-const MultipleChoice = ({ block }: Props) => {
+const MultipleChoiceDisplay = ({
+  block,
+  onAnswerChange,
+}: MultipleChoiceDisplayProps) => {
+  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+
+  const handleOptionChange = (option: string) => {
+    onAnswerChange({
+      questionId: block.id,
+      questionType: block.type,
+      question: block.question,
+      answer: option,
+    });
+  };
+
+  const handleCheck = (option: string) => {
+    const currentCheckedItems = checkedItems.includes(option)
+      ? checkedItems.filter((item) => item !== option)
+      : [...checkedItems, option];
+
+    setCheckedItems(currentCheckedItems);
+    onAnswerChange({
+      questionId: block.id,
+      questionType: block.type,
+      question: block.question,
+      answer: currentCheckedItems,
+    });
+  };
+
   return (
     <div className="border px-5 py-3 rounded-md">
-      <h1 className="text-xl font-bold pb-2 capitalize">{block.question}</h1>
-      <p className="text-xs text-gray-500">{block.description}</p>
-      <div className="py-4 px-3">
+      <div className="flex flex-col gap-1 pb-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold capitalize">{block.question}</h2>
+          <span className="text-xs text-red-500 font-medium">
+            {block.required ? "Required" : ""}
+          </span>
+        </div>
+        <p className="text-xs text-gray-500">{block.description}</p>
+      </div>
+      <div className="flex flex-col gap-1">
         {block.optionsType === "checkbox" ? (
           <>
-            <div className="flex flex-col gap-1">
-              {block.options?.map((option) => (
-                <CheckBoxItem key={option} option={option} />
-              ))}
-            </div>
+            {block.options?.map((option) => (
+              <CheckBoxItem
+                key={option}
+                option={option}
+                handleCheck={handleCheck}
+              />
+            ))}
           </>
         ) : null}
         {block.optionsType === "radio" ? (
           <>
-            <RadioGroup defaultValue={block.options?.[0]}>
+            <RadioGroup onValueChange={handleOptionChange}>
               {block.options?.map((option) => (
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center" key={option}>
                   <RadioGroupItem key={option} value={option} id={option} />
                   <Label htmlFor={option}>{option}</Label>
                 </div>
@@ -53,7 +97,7 @@ const MultipleChoice = ({ block }: Props) => {
           </>
         ) : null}
         {block.optionsType === "dropdown" ? (
-          <Select>
+          <Select onValueChange={handleOptionChange}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
@@ -75,4 +119,4 @@ const MultipleChoice = ({ block }: Props) => {
   );
 };
 
-export default MultipleChoice;
+export { MultipleChoiceDisplay };
