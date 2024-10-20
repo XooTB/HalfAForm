@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import useTemplate from "@/hooks/useTemplate";
 import { Answer } from "@/type/form";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AnswerSchema } from "@/type/form";
 import useForm from "@/hooks/useForm";
 import Link from "next/link";
@@ -21,12 +21,27 @@ const page = () => {
     error: createFormError,
   } = useForm({ templateId: templateId as string });
 
+  const requiredFields = useMemo(() => {
+    return template?.blocks.filter((block) => block.required);
+  }, [template]);
+
   useEffect(() => {
     getTemplate(templateId as string);
   }, [templateId]);
 
+  console.log(answers);
+
   const handleAnswerChange = (answer: Answer) => {
     setAnswers((prevAnswers) => {
+      const isValid = Array.isArray(answer.answer)
+        ? answer.answer.length === 0
+        : answer.answer === "";
+
+      if (isValid) {
+        // Remove the answer if it's empty
+        return prevAnswers.filter((a) => a.questionId !== answer.questionId);
+      }
+
       const existingAnswerIndex = prevAnswers.findIndex(
         (a) => a.questionId === answer.questionId
       );
@@ -43,22 +58,46 @@ const page = () => {
     });
   };
 
-  console.log(answers);
+  const validateRequiredFields = () => {
+    if (!requiredFields || answers.length < requiredFields.length) {
+      return "Please fill in all required fields";
+    }
+
+    const missingFields = requiredFields.filter(
+      (field) => !answers.some((answer) => answer.questionId === field.id)
+    );
+
+    if (missingFields.length > 0) {
+      return `Please fill in all required fields. Missing: ${missingFields
+        .map((field) => field.question)
+        .join(", ")}`;
+    }
+
+    return null;
+  };
 
   const handleFormSubmit = async () => {
     setSubmitError(null);
 
-    if (answers.length !== template?.blocks.length) {
-      setSubmitError("Please fill in all required fields");
+    const validateAnswers = () => {
+      try {
+        answers.forEach((answer) => AnswerSchema.parse(answer));
+        return null;
+      } catch (error) {
+        return "Please check your answers";
+      }
+    };
+
+    const requiredFieldsError = validateRequiredFields();
+    if (requiredFieldsError) {
+      setSubmitError(requiredFieldsError);
       return;
     }
 
-    try {
-      answers.forEach((answer) => {
-        AnswerSchema.parse(answer);
-      });
-    } catch (error) {
-      setSubmitError("Please fill in all required fields");
+    const answersError = validateAnswers();
+    if (answersError) {
+      setSubmitError(answersError);
+      return;
     }
 
     createForm(answers);
@@ -85,6 +124,9 @@ const page = () => {
           {isCreatingForm ? "Submitting..." : "Submit Answers"}
         </Button>
         {submitError && <p className="text-red-500 text-xs">{submitError}</p>}
+        {createFormError && (
+          <p className="text-red-500 text-xs">{createFormError}</p>
+        )}
       </div>
     </div>
   );
