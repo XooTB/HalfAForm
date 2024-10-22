@@ -16,6 +16,7 @@ import SortableContextWrapper from "@/components/dnd/SortableContext";
 import AddBlockButton from "@/components/sections/AddBlockSection";
 import StatusToggle from "@/components/StatusToggle";
 import DeleteDialogue from "@/components/sections/DeleteDialogue";
+import { toast } from "sonner";
 
 // Main component for editing a template
 const Page = () => {
@@ -148,9 +149,10 @@ const Page = () => {
     }
   };
 
-  const handleUpdateTemplate = () => {
+  const handleUpdateTemplate = async () => {
     if (templateData) {
-      updateTemplate(templateId as string, templateData);
+      await updateTemplate(templateId as string, templateData);
+      toast.success("Template updated successfully");
     }
   };
 

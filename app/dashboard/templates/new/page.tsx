@@ -7,6 +7,7 @@ import { useSaveTemplate } from "@/hooks/useSaveTemplate";
 import PreviewModal from "@/components/sections/PreviewModal";
 import TemplateSettings from "@/components/sections/TemplateSettings";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -18,6 +19,7 @@ const page = ({}: Props) => {
   const handleSaveTemplate = async () => {
     const savedTemplate = await saveTemplate();
     if (savedTemplate) {
+      toast.success("Template created successfully");
       router.push(`/dashboard/templates`);
     }
   };
