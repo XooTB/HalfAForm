@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Template } from "@/type/template";
+import { Template, TemplateDisplay } from "@/type/template";
 import { signOut, useSession } from "next-auth/react";
 
 const useGetTemplates = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [templates, setTemplates] = useState<Template[]>([]);
+  const [templates, setTemplates] = useState<TemplateDisplay[]>([]);
   const [error, setError] = useState<string | null>(null);
   const { data: session } = useSession();
 

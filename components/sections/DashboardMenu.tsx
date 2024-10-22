@@ -19,6 +19,11 @@ const MenuOptions = [
     icon: <FileUp />,
     path: "/dashboard/forms",
   },
+  {
+    name: "Submissions",
+    icon: <FileUp />,
+    path: "/dashboard/submissions",
+  },
 ];
 
 const MenuOption = ({

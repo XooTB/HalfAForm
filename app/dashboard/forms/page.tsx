@@ -19,8 +19,6 @@ const page = () => {
     getForms();
   }, []);
 
-  console.log(forms);
-
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (forms.length === 0) return <div>No forms found</div>;

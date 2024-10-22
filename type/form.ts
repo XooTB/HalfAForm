@@ -15,6 +15,9 @@ export const FormCreateSchema = z.object({
 export const FormSchema = z.object({
   id: z.string().uuid().optional(),
   userId: z.string(),
+  user: z.object({
+    name: z.string(),
+  }),
   templateId: z.string(),
   answers: z.array(AnswerSchema),
   createdAt: z.date().optional(),

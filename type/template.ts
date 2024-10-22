@@ -36,6 +36,9 @@ export const TemplateDisplaySchema = z.object({
   author: z.object({
     name: z.string(),
   }),
+  _count: z.object({
+    forms: z.number(),
+  }),
 });
 
 export type QuestionBlock = z.infer<typeof QuestionBlockSchema>;
