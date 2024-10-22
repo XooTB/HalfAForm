@@ -62,7 +62,9 @@ const config: Config = {
         },
       },
       fontFamily: {
+        inter: ["Inter", "sans-serif"],
         oswald: ["Oswald", "sans-serif"],
+        poppins: ["Poppins", "sans-serif"],
       },
     },
   },

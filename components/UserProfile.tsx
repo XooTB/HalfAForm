@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const UserProfile = () => {
   const { data: session } = useSession();
@@ -23,16 +24,27 @@ const UserProfile = () => {
       {session ? (
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+            <Avatar className="border-2 border-gray-200">
+              <AvatarImage
+                src={`https://robohash.org/${session.user?.id}?set=set3`}
+                alt={session.user?.name || "User avatar"}
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/user/${session.user?.id}`}>Profile</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/dashboard">Dashboard</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/dashboard/templates">Templates</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/dashboard/submissions">Submissions</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => signOut({ callbackUrl: "/login" })}
