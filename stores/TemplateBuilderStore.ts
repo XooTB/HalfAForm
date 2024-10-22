@@ -5,12 +5,12 @@ interface TemplateBuilderStore {
   name: string;
   description: string;
   status: "draft" | "published";
-  image: string | null;
+  image: string;
   blocks: QuestionBlock[];
   setName: (name: string) => void;
   setDescription: (description: string) => void;
   setStatus: (status: "draft" | "published") => void;
-  setImage: (image: string | null) => void;
+  setImage: (image: string) => void;
   addBlock: (block: QuestionBlock) => void;
   updateBlock: (id: string, updates: Partial<QuestionBlock>) => void;
   removeBlock: (id: string) => void;
@@ -22,7 +22,7 @@ export const useTemplateBuilderStore = create<TemplateBuilderStore>((set) => ({
   name: "",
   description: "",
   status: "draft",
-  image: null,
+  image: "",
   blocks: [],
   setName: (name) => set({ name }),
   setDescription: (description) => set({ description }),
@@ -47,7 +47,7 @@ export const useTemplateBuilderStore = create<TemplateBuilderStore>((set) => ({
     })),
   getTemplate: (): Template => ({
     name: useTemplateBuilderStore.getState().name,
-    image: useTemplateBuilderStore.getState().image || undefined,
+    image: useTemplateBuilderStore.getState().image,
     description: useTemplateBuilderStore.getState().description,
     blocks: useTemplateBuilderStore.getState().blocks,
     status: useTemplateBuilderStore.getState().status,

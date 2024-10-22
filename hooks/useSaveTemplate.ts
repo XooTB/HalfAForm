@@ -19,7 +19,7 @@ const messageBuilder = createMessageBuilder({
 export const useSaveTemplate = () => {
   const [error, setError] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { name, description, blocks } = useTemplateBuilderStore();
+  const { name, description, blocks, image } = useTemplateBuilderStore();
   const { data: session } = useSession();
 
   const saveTemplate = async () => {
@@ -32,6 +32,7 @@ export const useSaveTemplate = () => {
         name,
         description,
         blocks,
+        image,
       });
 
       if (!validation.success) {
@@ -42,6 +43,7 @@ export const useSaveTemplate = () => {
             .slice(1)
             .map((err) => err.trim())
         );
+
         setIsLoading(false);
         return;
       }
@@ -56,6 +58,7 @@ export const useSaveTemplate = () => {
         name,
         description,
         blocks: Blocks,
+        image,
       };
 
       const response = await fetch(
