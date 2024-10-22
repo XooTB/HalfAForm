@@ -32,6 +32,8 @@ const authOptions: NextAuthOptions = {
             id: response.user.id,
             email: response.user.email,
             name: response.user.name,
+            role: response.user.role,
+            status: response.user.status,
             accessToken: response.token || "",
           };
         }
@@ -45,6 +47,8 @@ const authOptions: NextAuthOptions = {
       if (account && user) {
         token.id = user.id;
         token.accessToken = user.accessToken;
+        token.role = user.role;
+        token.status = user.status;
       }
 
       return token;
@@ -56,6 +60,8 @@ const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id as string,
           email: token.email as string,
+          role: token.role as "regular" | "admin",
+          status: token.status as "active" | "restricted",
         },
         accessToken: token.accessToken as string,
       };

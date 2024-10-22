@@ -5,6 +5,8 @@ interface LoginResponse {
     id: string;
     email: string;
     name: string;
+    role: "regular" | "admin";
+    status: "active" | "restricted";
   };
   token?: string;
 }

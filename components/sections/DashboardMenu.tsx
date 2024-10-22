@@ -1,7 +1,12 @@
-import { FileUp, LayoutDashboard, LayoutTemplate } from "lucide-react";
 import React from "react";
 import Link from "next/link";
-type Props = {};
+import {
+  LayoutDashboard,
+  LayoutTemplate,
+  FileText,
+  Inbox,
+  Users,
+} from "lucide-react";
 
 const MenuOptions = [
   {
@@ -16,13 +21,18 @@ const MenuOptions = [
   },
   {
     name: "Forms",
-    icon: <FileUp />,
+    icon: <FileText />,
     path: "/dashboard/forms",
   },
   {
     name: "Submissions",
-    icon: <FileUp />,
+    icon: <Inbox />,
     path: "/dashboard/submissions",
+  },
+  {
+    name: "Users",
+    icon: <Users />,
+    path: "/dashboard/users",
   },
 ];
 
@@ -38,19 +48,23 @@ const MenuOption = ({
   return (
     <Link
       href={path}
-      className="flex items-center gap-2 border-b px-1 py-2 hover:bg-gray-100 hover:cursor-pointer"
+      className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-3 py-3 hover:bg-gray-100 dark:hover:bg-gray-800 hover:cursor-pointer transition-colors duration-200"
     >
-      {icon}
-      <span className="text-sm font-semibold">{name}</span>
+      <span className="text-gray-600 dark:text-gray-300">{icon}</span>
+      <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+        {name}
+      </span>
     </Link>
   );
 };
 
-const DashboardMenu = (props: Props) => {
+const DashboardMenu = () => {
   return (
-    <div className="w-1/6 border-r border-gray-200 flex flex-col pl-10">
-      <h1 className="text-3xl font-bold pb-12">Dashboard</h1>
-      <div className="flex flex-col ">
+    <div className="w-1/6 min-h-screen border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex flex-col pl-6 pr-4 py-8">
+      <h1 className="text-3xl font-bold pb-8 text-gray-900 dark:text-white">
+        Dashboard
+      </h1>
+      <nav className="flex flex-col space-y-1">
         {MenuOptions.map((option) => (
           <MenuOption
             key={option.name}
@@ -59,7 +73,7 @@ const DashboardMenu = (props: Props) => {
             path={option.path}
           />
         ))}
-      </div>
+      </nav>
     </div>
   );
 };
