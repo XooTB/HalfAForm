@@ -72,12 +72,6 @@ const page = () => {
           </div>
         </div>
       </div>
-      <hr className="w-full" />
-      <div className="py-2 w-full gap-4">
-        <div className="w-full pb-2">
-          <h1 className="text-xl font-semibold">Submissions</h1>
-        </div>
-      </div>
     </div>
   );
 };
