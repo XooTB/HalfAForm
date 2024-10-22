@@ -26,5 +26,18 @@ export const TemplateSchema = z.object({
   version: z.number().optional(),
 });
 
+export const TemplateDisplaySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  image: z.string(),
+  status: z.enum(["draft", "published"]),
+  updatedAt: z.string(),
+  author: z.object({
+    name: z.string(),
+  }),
+});
+
 export type QuestionBlock = z.infer<typeof QuestionBlockSchema>;
 export type Template = z.infer<typeof TemplateSchema>;
+export type TemplateDisplay = z.infer<typeof TemplateDisplaySchema>;
