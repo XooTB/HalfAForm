@@ -17,6 +17,7 @@ import AddBlockButton from "@/components/sections/AddBlockSection";
 import StatusToggle from "@/components/StatusToggle";
 import DeleteDialogue from "@/components/sections/DeleteDialogue";
 import { toast } from "sonner";
+import ManageAdmins from "@/components/sections/ManageAdmins";
 
 // Main component for editing a template
 const Page = () => {
@@ -182,6 +183,12 @@ const Page = () => {
             </div>
           </div>
           <div className="flex gap-2">
+            {templateData.admins && (
+              <ManageAdmins
+                admins={templateData.admins}
+                templateId={templateId as string}
+              />
+            )}
             <StatusToggle
               status={templateData.status}
               setStatus={handleStatusChange}

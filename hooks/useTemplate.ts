@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Template, TemplateSchema } from "@/type/template";
+import { Admin, Template, TemplateSchema } from "@/type/template";
 import { useSession } from "next-auth/react";
 import { ZodError } from "zod";
 import {
@@ -58,7 +58,6 @@ const useTemplate = () => {
   const validateTemplate = (template: Template): boolean => {
     try {
       const validation = TemplateSchema.safeParse(template);
-      console.log(fromError(validation.error, { messageBuilder }));
 
       if (!validation.success) {
         const errors = fromError(validation.error, { messageBuilder });
@@ -112,7 +111,6 @@ const useTemplate = () => {
       }
 
       const data = await res.json();
-      data.blocks = JSON.parse(data.blocks);
 
       setTemplate(data);
       console.log("Template updated successfully:", data);
@@ -154,6 +152,41 @@ const useTemplate = () => {
     }
   };
 
+  const updateTemplateAdmins = async (admins: Admin[], templateId: string) => {
+    try {
+      setIsLoading(true);
+      const adminsList = admins.map((admin) => admin.id);
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/templates/admins/${templateId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+          body: JSON.stringify({ admins: adminsList }),
+        }
+      );
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error);
+      }
+
+      const template = await res.json();
+      if (!adminsList.includes(session?.user.id as string)) {
+        router.push("/dashboard/templates");
+      }
+
+      return template;
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     template,
     isLoading,
@@ -162,6 +195,7 @@ const useTemplate = () => {
     getTemplate,
     updateTemplate,
     deleteTemplate,
+    updateTemplateAdmins,
   };
 };
 

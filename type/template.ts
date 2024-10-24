@@ -10,6 +10,12 @@ export const QuestionBlockSchema = z.object({
   options: z.array(z.string()).optional(),
 });
 
+export const AdminSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+});
+
 export const TemplateSchema = z.object({
   name: z.string().min(1, { message: "Template name is required" }),
   author: z.string().optional(),
@@ -24,6 +30,7 @@ export const TemplateSchema = z.object({
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
   version: z.number().optional(),
+  admins: z.array(AdminSchema).optional(),
 });
 
 export const TemplateDisplaySchema = z.object({
@@ -39,8 +46,10 @@ export const TemplateDisplaySchema = z.object({
   _count: z.object({
     forms: z.number(),
   }),
+  admins: z.array(AdminSchema).optional(),
 });
 
 export type QuestionBlock = z.infer<typeof QuestionBlockSchema>;
 export type Template = z.infer<typeof TemplateSchema>;
 export type TemplateDisplay = z.infer<typeof TemplateDisplaySchema>;
+export type Admin = z.infer<typeof AdminSchema>;
