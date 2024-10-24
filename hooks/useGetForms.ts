@@ -23,7 +23,11 @@ const useGetForms = () => {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch forms");
+        if (response.status === 404) {
+          setError("No forms found");
+        } else {
+          throw new Error("Failed to fetch forms");
+        }
       }
 
       const data = await response.json();
