@@ -3,9 +3,7 @@
 import { Template } from "@/type/template";
 import { TextQuestionDisplay } from "../blocks/TextQuestionBlock";
 import { ParagraphQuestionDisplay } from "../blocks/ParagraphQuestionBlock";
-import MultipleChoice, {
-  MultipleChoiceDisplay,
-} from "../blocks/MultipleChoice";
+import { MultipleChoiceDisplay } from "../blocks/MultipleChoice";
 import { ScrollArea } from "../ui/scroll-area";
 import { Answer } from "@/type/form";
 

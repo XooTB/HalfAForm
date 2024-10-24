@@ -32,7 +32,7 @@ const PreviewModal = ({ open, onClose, children }: Props) => {
             className="cursor-pointer hover:bg-gray-200 p-1 rounded-md"
           />
         </div>
-        <FormView template={getTemplate()} />
+        <FormView template={getTemplate()} onAnswerChange={() => {}} />
       </div>
     </div>
   );
