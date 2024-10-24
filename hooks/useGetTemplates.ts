@@ -13,8 +13,6 @@ const useGetTemplates = () => {
   const fetchTemplates = async () => {
     setIsLoading(true);
     try {
-      console.log(session?.accessToken);
-
       const res = await fetch(`${process.env.NEXT_PUBLIC_API}/templates/user`, {
         method: "GET",
         headers: {

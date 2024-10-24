@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { User } from "@/type/user";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const useUsers = () => {
   const { data: session } = useSession();
@@ -109,7 +110,43 @@ const useUsers = () => {
     }
   };
 
-  return { fetchUsers, isLoading, error, users, updateUser, deleteUser };
+  const getUserStats = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/users/stats`,
+        {
+          headers: {
+            Authorization: `Bearer ${session?.accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch user stats");
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "An error occurred",
+        {
+          description: "Failed to fetch user stats",
+        }
+      );
+    }
+  };
+
+  return {
+    fetchUsers,
+    isLoading,
+    error,
+    users,
+    updateUser,
+    deleteUser,
+    getUserStats,
+  };
 };
 
 export default useUsers;

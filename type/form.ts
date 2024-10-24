@@ -34,6 +34,17 @@ export const FormWithTemplateSchema = FormSchema.extend({
   template: TemplateFieldsSchema,
 });
 
+export const SubmissionSchema = z.object({
+  id: z.string(),
+  createdAt: z.string(),
+  answers: z.array(AnswerSchema),
+  template: TemplateFieldsSchema,
+  user: z.object({
+    name: z.string(),
+  }),
+});
+
+export type Submission = z.infer<typeof SubmissionSchema>;
 export type Answer = z.infer<typeof AnswerSchema>;
 export type FormCreate = z.infer<typeof FormCreateSchema>;
 export type Form = z.infer<typeof FormSchema>;
