@@ -1,32 +1,23 @@
-"use client";
-
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
 import BreadCrumbs from "@/components/sections/BreadCrumbs";
 import DashboardMenu from "@/components/sections/DashboardMenu";
 import type { Metadata } from "next";
-import { useSession } from "next-auth/react";
-import { Inter } from "next/font/google";
-import { redirect } from "next/navigation";
 
-const inter = Inter({ subsets: ["latin"] });
+export const metadata: Metadata = {
+  title: "Dashboard | Former",
+  description: "Dashboard",
+};
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect("/login");
-    },
-  });
+  const session = await getServerSession();
 
   if (!session) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center text-xl font-bold">
-        Redirecting...
-      </div>
-    );
+    redirect("/login");
   }
 
   return (

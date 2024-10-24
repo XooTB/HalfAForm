@@ -8,16 +8,20 @@ import FormCard from "@/components/cards/FormCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FormWithTemplate } from "@/type/form";
 import FormDetails from "@/components/sections/FormDetails";
+import { useSession } from "next-auth/react";
 
 const page = () => {
   const { isLoading, error, getForms, forms } = useGetForms();
   const [currentForm, setCurrentForm] = useState<FormWithTemplate | null>(
     forms[0]
   );
+  const { data: session } = useSession();
 
   useEffect(() => {
-    getForms();
-  }, []);
+    if (session?.user) {
+      getForms();
+    }
+  }, [session]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -54,10 +58,12 @@ const page = () => {
       <hr className="w-full" />
       <div className="py-2 w-full gap-4">
         <div className="w-full pb-2">
-          <h1 className="text-xl font-semibold">My Forms</h1>
+          <h1 className="text-xl font-semibold text-primary dark:text-dark-primary">
+            My Forms
+          </h1>
         </div>
         <div className="w-full flex gap-4">
-          <ScrollArea className="h-[500px] w-2/4 px-2">
+          <ScrollArea className="h-[500px] w-2/4 px-3 border rounded-md py-2">
             {forms.map((form) => (
               <FormCard
                 key={form.id}

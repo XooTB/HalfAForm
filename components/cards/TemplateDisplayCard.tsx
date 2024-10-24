@@ -22,9 +22,11 @@ const TemplateDisplayCard = ({ template }: Props) => {
             className="w-full h-[200px] object-cover border rounded-t-lg"
           />
         </CardContent>
-        <CardFooter className="flex-col justify-start gap-2 pt-3 px-3">
-          <h1 className="text-lg font-bold line-clamp-1">{template.name}</h1>
-          <p className="text-sm text-gray-500 line-clamp-2">
+        <CardFooter className="flex-col items-start justify-start gap-2 pt-3 px-3">
+          <h1 className="text-lg font-bold line-clamp-1 text-primary dark:text-dark-primary">
+            {template.name}
+          </h1>
+          <p className="text-sm text-muted-foreground dark:text-dark-muted-foreground line-clamp-2">
             {template.description}
           </p>
           <div className="flex gap-2 justify-start w-full pt-2">

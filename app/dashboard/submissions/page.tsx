@@ -14,7 +14,7 @@ import useFetchSubmissions from "@/hooks/useFetchSubmissions";
 import SubmissionCard from "@/components/cards/SubmissionCard";
 import { Form } from "@/type/form";
 import FormDetails from "@/components/sections/FormDetails";
-
+import { useSession } from "next-auth/react";
 const page = () => {
   const { templates, isLoading, error, fetchTemplates } = useGetTemplates();
   const [selectedTemplate, setSelectedTemplate] =
@@ -22,6 +22,7 @@ const page = () => {
   const [selectedSubmission, setSelectedSubmission] = useState<Form | null>(
     null
   );
+  const { data: session } = useSession();
 
   const {
     fetchSubmissions,
@@ -30,8 +31,10 @@ const page = () => {
   } = useFetchSubmissions();
 
   useEffect(() => {
-    fetchTemplates();
-  }, []);
+    if (session?.accessToken) {
+      fetchTemplates();
+    }
+  }, [session?.accessToken]);
 
   useEffect(() => {
     if (selectedTemplate) {
@@ -39,9 +42,27 @@ const page = () => {
     }
   }, [selectedTemplate]);
 
+  if (isLoading) {
+    return <p>...Loading</p>;
+  }
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+          <p className="font-bold">Error:</p>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex gap-5 min-h-[500px] w-full px-10">
-      <ResizablePanelGroup direction="horizontal" className="min-h-[500px]">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="min-h-[500px] bg-primary-foreground"
+      >
         <ResizablePanel defaultSize={33} className="border px-2 py-2">
           <p className="text-xl font-semibold pb-2">Templates</p>
           <hr className="w-full" />
@@ -64,7 +85,7 @@ const page = () => {
         <ResizablePanel defaultSize={33} className="border px-2 py-2">
           <p className="text-xl font-semibold pb-2">Submissions</p>
           <hr className="w-full" />
-          <ScrollArea className="h-[500px] ">
+          <ScrollArea className="h-[500px]">
             <div className="w-full h-full py-2">
               {submissions &&
                 submissions.map((submission) => {

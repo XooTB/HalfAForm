@@ -22,7 +22,7 @@ type Props = {
 
 const TemplateCard = ({ template }: Props) => {
   return (
-    <Card className="hover:cursor-pointer hover:shadow-lg transition-all duration-300">
+    <Card className="hover:cursor-pointer hover:shadow-lg transition-all duration-300 bg-card dark:bg-dark-card">
       <CardContent>
         <Image
           src="/placeholders/template_img.png"

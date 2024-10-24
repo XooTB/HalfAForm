@@ -29,8 +29,6 @@ const page = () => {
     getTemplate(templateId as string);
   }, [templateId]);
 
-  console.log(answers);
-
   const handleAnswerChange = (answer: Answer) => {
     setAnswers((prevAnswers) => {
       const isValid = Array.isArray(answer.answer)
@@ -104,8 +102,25 @@ const page = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!template) return <div>Template not found</div>;
+  if (error)
+    return (
+      <div className="w-full min-h-screen flex flex-col items-center justify-center gap-5">
+        <p className="text-2xl">Template not found!</p>
+        <Link href="/templates">
+          <Button variant="default">Checkout Templates</Button>
+        </Link>
+      </div>
+    );
+  if (!template)
+    return (
+      <div className="w-full min-h-screen flex flex-col items-center justify-center gap-5">
+        <p className="text-2xl">Template not found! </p>
+        <Link href="/templates">
+          <Button variant="default">Checkout Templates</Button>
+        </Link>
+      </div>
+    );
+
   if (template.status === "draft")
     return (
       <div className="min-h-screen w-full flex justify-center items-center text-2xl pb-20 flex-col gap-5">
@@ -117,15 +132,21 @@ const page = () => {
     );
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center text-2xl pb-20">
-      <div className="w-1/2 flex flex-col gap-5">
+    <div className="min-h-screen w-full flex justify-center items-center text-base sm:text-lg md:text-xl lg:text-2xl pb-10 sm:pb-20 px-4 sm:px-6 md:px-8">
+      <div className="w-full sm:w-4/5 md:w-3/4 lg:w-2/3 xl:w-1/2 flex flex-col gap-3 sm:gap-4 md:gap-5">
         <FormView template={template} onAnswerChange={handleAnswerChange} />
-        <Button onClick={handleFormSubmit} disabled={isCreatingForm}>
+        <Button
+          onClick={handleFormSubmit}
+          disabled={isCreatingForm}
+          className="w-full sm:w-auto"
+        >
           {isCreatingForm ? "Submitting..." : "Submit Answers"}
         </Button>
-        {submitError && <p className="text-red-500 text-xs">{submitError}</p>}
+        {submitError && (
+          <p className="text-red-500 text-xs sm:text-sm">{submitError}</p>
+        )}
         {createFormError && (
-          <p className="text-red-500 text-xs">{createFormError}</p>
+          <p className="text-red-500 text-xs sm:text-sm">{createFormError}</p>
         )}
       </div>
     </div>

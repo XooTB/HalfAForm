@@ -10,7 +10,7 @@ type Props = {
 
 const FormDetails = ({ form }: Props) => {
   return (
-    <div className="w-full px-3 h-full py-5 ">
+    <div className="w-full px-3 h-full py-5">
       <div className="pb-5 flex items-center justify-between">
         <p className="text-xl font-semibold">Form Details</p>
         <Button variant="outline">Edit Answers</Button>
@@ -23,12 +23,12 @@ const FormDetails = ({ form }: Props) => {
           {form.answers.map((answer) => (
             <Card
               key={answer.questionId}
-              className="flex flex-col justify-between px-2 py-3 hover:shadow-md transition-shadow duration-300"
+              className="flex flex-col justify-between px-2 py-3 hover:shadow-md transition-shadow duration-300 bg-card dark:bg-dark-card"
             >
-              <CardHeader className="font-semibold text-base text-slate-800 dark:text-slate-200 p-0 py-2 px-2 pb-3">
+              <CardHeader className="font-semibold text-base text-primary dark:text-dark-primary p-0 py-2 px-2 pb-3">
                 {answer.question}
               </CardHeader>
-              <CardContent className="text-sm bg-slate-100 dark:bg-slate-700 rounded-md px-3 py-2 text-slate-600 dark:text-slate-200">
+              <CardContent className="text-sm bg-muted dark:bg-dark-muted rounded-md px-3 py-2 text-muted-foreground dark:text-dark-muted-foreground">
                 {answer.answer}
               </CardContent>
             </Card>

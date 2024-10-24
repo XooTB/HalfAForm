@@ -25,21 +25,21 @@ export default function FormView({ template, onAnswerChange }: FormViewProps) {
 
   return (
     <div className="w-full h-full">
-      <ScrollArea className="h-[95%]">
+      <ScrollArea className="h-[95%] sm:h-full">
         <div
           style={style}
-          className="flex flex-col justify-end gap-2 bg-cover bg-center bg-no-repeat h-[300px] px-5 py-5 rounded-t-md"
+          className="flex flex-col justify-end gap-2 bg-cover bg-center bg-no-repeat h-[200px] sm:h-[300px] px-3 sm:px-5 py-3 sm:py-5 rounded-t-md"
         >
-          <div className="flex flex-col gap-1 bg-black/50 p-3 rounded-md">
-            <h1 className="text-3xl font-bold text-white pb-2">
+          <div className="flex flex-col gap-1 bg-black/50 p-2 sm:p-3 rounded-md">
+            <h1 className="text-2xl sm:text-3xl font-bold text-secondary dark:text-primary pb-1 sm:pb-2">
               {template.name}
             </h1>
-            <p className="text-xs text-white font-medium leading-4">
+            <p className="text-xs sm:text-sm text-primary-foreground dark:text-primary font-medium leading-4 sm:leading-5">
               {template.description}
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 px-3 sm:px-5 py-3 sm:py-5">
           {template.blocks &&
             template.blocks.map((block) => {
               switch (block.type) {

@@ -107,17 +107,22 @@ const ParagraphQuestionDisplay = ({
     onAnswerChange(answer);
   };
   return (
-    <div className="border px-5 py-3 rounded-md">
+    <div className="border px-5 py-3 rounded-md bg-card dark:bg-dark-card">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold pb-2">{block.question}</h1>
+        <h1 className="text-xl font-bold pb-2 text-primary dark:text-dark-primary">
+          {block.question}
+        </h1>
         <span className="text-xs text-red-500 font-medium">
           {block.required ? "Required" : ""}
         </span>
       </div>
-      <p className="text-xs text-gray-500 pb-4">{block.description}</p>
+      <p className="text-xs text-muted-foreground dark:text-dark-muted-foreground pb-4">
+        {block.description}
+      </p>
       <Textarea
         className="h-24 text-sm"
         onChange={(e) => handleAnswerChange(e)}
+        placeholder="Enter your answer"
       />
     </div>
   );

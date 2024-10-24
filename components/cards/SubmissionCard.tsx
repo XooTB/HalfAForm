@@ -10,11 +10,13 @@ const SubmissionCard = ({ submission, onClick }: Props) => {
   return (
     <div
       onClick={onClick}
-      className="border px-2 py-2 rounded-md mb-2 hover:shadow-md transition-shadow duration-300 hover:cursor-pointer"
+      className={`mb-2 rounded-md border bg-muted 
+        px-2 py-2 hover:cursor-pointer hover:shadow-md 
+        dark:bg-dark-muted transition-shadow duration-300`}
     >
       <div className="flex items-center justify-between">
         <p className="text-sm font-semibold">{submission.user.name}</p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground dark:text-dark-muted-foreground">
           {submission.updatedAt &&
             new Date(submission.updatedAt).toLocaleDateString("en-US", {
               day: "numeric",

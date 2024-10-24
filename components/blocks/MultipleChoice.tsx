@@ -27,7 +27,7 @@ const CheckBoxItem = ({ option, handleCheck }: CheckBoxItemProps) => {
   return (
     <div className="flex gap-2 items-center">
       <Checkbox onCheckedChange={() => handleCheck?.(option)} />
-      <label className="text-bas">{option}</label>
+      <Label className="text-base">{option}</Label>
     </div>
   );
 };
@@ -62,15 +62,19 @@ const MultipleChoiceDisplay = ({
   };
 
   return (
-    <div className="border px-5 py-3 rounded-md">
+    <div className="border px-5 py-3 rounded-md bg-card dark:bg-dark-card">
       <div className="flex flex-col gap-1 pb-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold capitalize">{block.question}</h2>
+          <h2 className="text-xl font-bold capitalize text-primary dark:text-dark-primary">
+            {block.question}
+          </h2>
           <span className="text-xs text-red-500 font-medium">
             {block.required ? "Required" : ""}
           </span>
         </div>
-        <p className="text-xs text-gray-500">{block.description}</p>
+        <p className="text-xs text-muted-foreground dark:text-dark-muted-foreground">
+          {block.description}
+        </p>
       </div>
       <div className="flex flex-col gap-1">
         {block.optionsType === "checkbox" ? (
@@ -90,7 +94,9 @@ const MultipleChoiceDisplay = ({
               {block.options?.map((option) => (
                 <div className="flex gap-2 items-center" key={option}>
                   <RadioGroupItem key={option} value={option} id={option} />
-                  <Label htmlFor={option}>{option}</Label>
+                  <Label htmlFor={option} className="text-base">
+                    {option}
+                  </Label>
                 </div>
               ))}
             </RadioGroup>
