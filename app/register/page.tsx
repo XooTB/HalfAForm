@@ -89,9 +89,15 @@ const page = ({}: Props) => {
             required
           />
           {matchError && <p className="text-red-500 text-xs">{matchError}</p>}
-          <Button type="submit" className="mt-4" variant="default">
-            Register
+          <Button
+            type="submit"
+            className="mt-4"
+            variant="default"
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing up..." : "Register"}
           </Button>
+          {error && <p className="text-red-500 text-xs">{error}</p>}
         </form>
         <div className="flex flex-col gap-2 items-center justify-center">
           <p className="text-sm text-gray-500">or with</p>

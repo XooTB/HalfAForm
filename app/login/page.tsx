@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,15 +9,24 @@ import { SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
 type Props = {};
 
 const page = (props: Props) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = e.currentTarget.email.value;
-    const password = e.currentTarget.password.value;
-    await signIn("credentials", {
-      email,
-      password,
-      callbackUrl: "/dashboard",
-    });
+    try {
+      setIsLoading(true);
+      const email = e.currentTarget.email.value;
+      const password = e.currentTarget.password.value;
+      await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/dashboard",
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -60,12 +69,13 @@ const page = (props: Props) => {
               required
             />
           </div>
-          <button
+          <Button
             type="submit"
             className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 dark:bg-blue-800"
+            disabled={isLoading}
           >
-            Sign In
-          </button>
+            {isLoading ? "Signing in..." : "Sign In"}
+          </Button>
         </form>
 
         <p className="text-sm text-gray-500 mt-3 text-center">Or</p>
