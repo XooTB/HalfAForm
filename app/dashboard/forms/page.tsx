@@ -24,8 +24,13 @@ const page = () => {
   }, [session]);
 
   if (isLoading) return <div>Loading...</div>;
+  if (forms.length === 0)
+    return (
+      <div className="w-full text-center text-sm text-gray-500">
+        No forms found for this user!
+      </div>
+    );
   if (error) return <div>{error}</div>;
-  if (forms.length === 0) return <div>No forms found</div>;
 
   return (
     <div className="w-full px-5">
@@ -64,7 +69,7 @@ const page = () => {
         </div>
         <div className="w-full flex gap-4">
           <ScrollArea className="h-[500px] w-2/4 px-3 border rounded-md py-2">
-            {forms.map((form) => (
+            {forms?.map((form) => (
               <FormCard
                 key={form.id}
                 form={form}

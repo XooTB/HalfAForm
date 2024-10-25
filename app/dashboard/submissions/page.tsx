@@ -46,6 +46,14 @@ const page = () => {
     return <p>...Loading</p>;
   }
 
+  if (templates.length === 0)
+    return (
+      <div className="w-full text-center text-base text-gray-500">
+        <p>You don't have any templates!</p>
+        <p>Create a new template to start getting submissions!</p>
+      </div>
+    );
+
   if (error) {
     return (
       <div className="w-full h-full flex justify-center items-center">
