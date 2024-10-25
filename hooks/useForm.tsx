@@ -5,6 +5,7 @@ import { Answer, FormCreate, FormCreateSchema } from "@/type/form";
 import { useRouter } from "next/navigation";
 import { ZodError } from "zod";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 interface UseForm {
   templateId: string;
@@ -21,7 +22,8 @@ const useForm = ({ templateId }: UseForm) => {
     setError(null);
 
     if (!session?.accessToken) {
-      setError("Please login to create a form");
+      setError("Please login first to submit a form!");
+      toast.error("Please login first to submit a form!");
       setIsLoading(false);
       return;
     }
