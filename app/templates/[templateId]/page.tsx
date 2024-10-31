@@ -9,9 +9,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import { AnswerSchema } from "@/type/form";
 import useForm from "@/hooks/useForm";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const page = () => {
   const { templateId } = useParams();
+  const router = useRouter();
   const { template, isLoading, error, getTemplate } = useTemplate();
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -24,6 +27,8 @@ const page = () => {
   const requiredFields = useMemo(() => {
     return template?.blocks.filter((block) => block.required);
   }, [template]);
+
+  const { data: session } = useSession();
 
   useEffect(() => {
     getTemplate(templateId as string);
@@ -147,6 +152,17 @@ const page = () => {
         )}
         {createFormError && (
           <p className="text-red-500 text-xs sm:text-sm">{createFormError}</p>
+        )}
+
+        {session?.user.role === "admin" && (
+          <Link
+            href={`/dashboard/templates/edit/${templateId}`}
+            className="w-full flex"
+          >
+            <Button variant="default" className="w-full">
+              Edit Template
+            </Button>
+          </Link>
         )}
       </div>
     </div>
