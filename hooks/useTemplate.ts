@@ -113,7 +113,6 @@ const useTemplate = () => {
       const data = await res.json();
 
       setTemplate(data);
-      console.log("Template updated successfully:", data);
     } catch (error: any) {
       setError(error.message);
     } finally {
