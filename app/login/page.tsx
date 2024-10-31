@@ -84,7 +84,10 @@ const page = () => {
           >
             <SiGithub size={22} /> Sign In with Github
           </Button>
-          <Button className="w-1/2 gap-3">
+          <Button
+            className="w-1/2 gap-3"
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          >
             <SiGoogle size={22} /> Sign In with Google
           </Button>
         </div>

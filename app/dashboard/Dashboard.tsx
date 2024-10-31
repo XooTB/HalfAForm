@@ -7,7 +7,6 @@ import DashboardSubmissions from "@/components/sections/DashboardSubmissions";
 
 const Dashboard = async () => {
   const session = await getServerSession();
-  console.log(session);
 
   return (
     <div className="min-h-screen w-full px-10 flex flex-col">
