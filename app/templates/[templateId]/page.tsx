@@ -155,14 +155,18 @@ const page = () => {
         )}
 
         {session?.user.role === "admin" && (
-          <Link
-            href={`/dashboard/templates/edit/${templateId}`}
-            className="w-full flex"
-          >
-            <Button variant="default" className="w-full">
-              Edit Template
-            </Button>
-          </Link>
+          <div className="flex flex-col gap-2 fixed top-auto right-5 bg-primary-foreground border p-2 rounded-md shadow-md">
+            <p className="text-sm font-bold">Admin Actions</p>
+            <hr />
+            <Link
+              href={`/dashboard/templates/edit/${templateId}`}
+              className="w-full flex"
+            >
+              <Button variant="default" className="w-full">
+                Edit Template
+              </Button>
+            </Link>
+          </div>
         )}
       </div>
     </div>
