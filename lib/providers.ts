@@ -1,6 +1,8 @@
 import useLoginUser from "@/hooks/useLoginUser";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GithubProvider from "next-auth/providers/github";
+import handleGithubAuth from "@/hooks/useGithubAuth";
 
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -41,6 +43,10 @@ const authOptions: NextAuthOptions = {
         return null;
       },
     }),
+    GithubProvider({
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
+    }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {
@@ -65,6 +71,35 @@ const authOptions: NextAuthOptions = {
         },
         accessToken: token.accessToken as string,
       };
+    },
+    async signIn({ user, account }) {
+      if (account?.provider === "github") {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API}/auth/github`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+          }
+        );
+
+        if (!response.ok) {
+          return false;
+        }
+
+        const data = await response.json();
+
+        console.log({ data });
+
+        // Store any additional data from your backend
+        user.id = data.id;
+        user.role = data.role;
+        user.status = data.status;
+        user.accessToken = data.token;
+      }
+      return true;
     },
   },
 };

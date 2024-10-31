@@ -6,9 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
 
-type Props = {};
-
-const page = (props: Props) => {
+const page = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,7 +78,10 @@ const page = (props: Props) => {
 
         <p className="text-sm text-gray-500 mt-3 text-center">Or</p>
         <div className="flex justify-between gap-2 mt-4">
-          <Button className="w-1/2 gap-3">
+          <Button
+            className="w-1/2 gap-3"
+            onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+          >
             <SiGithub size={22} /> Sign In with Github
           </Button>
           <Button className="w-1/2 gap-3">
