@@ -96,9 +96,10 @@ const authOptions: NextAuthOptions = {
 
         const data = await response.json();
 
-        user.id = data.id;
-        user.role = data.role;
-        user.status = data.status;
+        user.id = data.user.id;
+        user.role = data.user.role;
+        user.status = data.user.status;
+        user.email = data.user.email;
         user.accessToken = data.token;
       }
 
@@ -120,9 +121,10 @@ const authOptions: NextAuthOptions = {
 
         const data = await response.json();
 
-        user.id = data.id;
-        user.role = data.role;
-        user.status = data.status;
+        user.id = data.user.id;
+        user.role = data.user.role;
+        user.status = data.user.status;
+        user.email = data.user.email;
         user.accessToken = data.token;
       }
 
